@@ -38,9 +38,9 @@ namespace Pandora.Infrastructure.Base
             _context.SaveChanges();
         }
 
-        public T Get(int id)
+        public T Get(Guid id)
         {
-            return entities.Find(id);
+            return _context.Set<T>().FirstOrDefault(q => q.Id == id);
         }
 
         public List<T> Get()

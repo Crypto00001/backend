@@ -6,27 +6,23 @@ namespace Pandora.Application.Command.Users
     public class CreateUserCommand
     {
         [Required]
-        [StringLength(200, MinimumLength = 10)]
-        public string UserName { get; set; }
-        [Required]
-        [StringLength(100, MinimumLength = 10)]
-        public string PasswordHash { get; set; }
-        [Required]
-        [StringLength(250, MinimumLength = 20)]
+        [StringLength(250, MinimumLength = 10)]
         public string Email { get; set; }
         [Required]
-        [StringLength(250, MinimumLength = 10)]
+        [StringLength(100, MinimumLength = 6)]
+        public string Password { get; set; }
+        [Required]
+        [StringLength(250)]
         public string FirstName { get; set; }
         [Required]
-        [StringLength(150, MinimumLength = 10)]
+        [StringLength(150)]
         public string LastName { get; set; }
         [Required]
-        [StringLength(100, MinimumLength = 10)]
+        [StringLength(100)]
         public string Country { get; set; }
         public User ToUser() => new User
         {
-            UserName = UserName,
-            PasswordHash = PasswordHash,
+            PasswordHash = Password,
             Email = Email,
             FirstName = FirstName,
             LastName = LastName,

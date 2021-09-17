@@ -14,7 +14,7 @@ namespace Pandora.Infrastructure.Base
         void Remove(Guid id);
         void Remove(T entity);
 
-        T Get(int id);
+        T Get(Guid id);
         List<T> Get();
     }
 }

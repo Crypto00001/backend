@@ -8,8 +8,9 @@ namespace Pandora.Domain.Repository
     {
         void Add(User User);
         void Remove(Guid UserId);
-
-        User Get(int UserId);
+        User Get(Guid UserId);
+        bool HasUserByEmail(string email);
+        User GetUserByEmail(string email);
         List<User> Get();
 
     }
