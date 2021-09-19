@@ -41,10 +41,14 @@ namespace Pandora
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pandora", Version = "v1" });
             });
             services.AddDbContext<EFDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("PandoraCnn")));
-            services.AddScoped<UserRepository, EfUserRepository>();
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddScoped<IJwtUtils, JwtUtils>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IDashboardService, DashboardService>();
+
+            services.AddScoped<UserRepository, EfUserRepository>();
+            services.AddScoped<DashboardRepository, EfDashboardRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

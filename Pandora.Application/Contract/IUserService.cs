@@ -11,6 +11,8 @@ namespace Pandora.Application.Contract
     public interface IUserService
     {
         void Add(CreateUserCommand command);
+        void Update(UpdateUserCommand command);
+        void UpdatePassword(UpdatePasswordUserCommand command);
         User Authenticate(LoginCommand model);
         User GetById(Guid userId);
         List<User> GetAll();

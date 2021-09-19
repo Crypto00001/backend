@@ -29,5 +29,5 @@ namespace Pandora.Application.Command.Users
             Country = Country
         };
 
-    }
+    }    
 }

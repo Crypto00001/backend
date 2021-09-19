@@ -13,7 +13,6 @@ namespace Pandora.Infrastructure.Config
             builder.Property(c => c.FirstName).IsRequired();
             builder.Property(c => c.LastName).IsRequired();
             builder.Property(c => c.Country).IsRequired();
-            builder.Property(c => c.CreateDate).IsRequired();
 
             builder.ToTable("User");
         }

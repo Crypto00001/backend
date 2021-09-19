@@ -2,6 +2,7 @@
 using Pandora.Application.Command.Users;
 using Pandora.Application.Contract;
 using Pandora.Application.Service;
+using Pandora.Application.ViewModel;
 using Pandora.Jwt;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Pandora.Controllers
 {
     [Authorize]
     [ApiController]
+    [Route("[controller]")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -36,13 +38,6 @@ namespace Pandora.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
-        [Route("GetAll")]
-        public IActionResult GetAll()
-        {
-            var users = _userService.GetAll();
-            return Ok(users);
-        }
         [AllowAnonymous]
         [HttpPost]
         [Route("Register")]
@@ -52,5 +47,54 @@ namespace Pandora.Controllers
             return Ok(new { message = "Registration successful" });
         }
 
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var users = _userService.GetAll();
+            return Ok(users);
+        }
+
+        [HttpPut]
+        public ResultResponse Update(UpdateUserCommand command)
+        {
+            try
+            {
+                _userService.Update(command);
+                return new ResultResponse
+                {
+                    HasError = false
+                };
+            }
+            catch (Exception e)
+            {
+                return new ResultResponse
+                {
+                    HasError = true,
+                    ErrorMessage = e.Message
+                };
+            }
+        }
+
+        [HttpPut]
+        [Route("Password")]
+        public ResultResponse UpdatePassword(UpdatePasswordUserCommand command)
+        {
+            try
+            {
+                _userService.UpdatePassword(command);
+                return new ResultResponse
+                {
+                    HasError = false
+                };
+            }
+            catch (Exception e)
+            {
+                return new ResultResponse
+                {
+                    HasError = true,
+                    ErrorMessage = e.Message
+                };
+            }
+        }
     }
 }

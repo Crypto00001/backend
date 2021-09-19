@@ -10,6 +10,7 @@ namespace Pandora.Infrastructure.Context
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Dashboard> Dashboards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

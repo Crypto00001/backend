@@ -42,12 +42,32 @@ namespace Pandora.Application.Service
 
         public List<User> GetAll()
         {
-            return _UserRepository.Get();
+            return _UserRepository.GetAll();
         }
 
         public void Remove(RemoveUserCommand command)
         {
             _UserRepository.Remove(command.Id);
+        }
+
+        public void Update(UpdateUserCommand command)
+        {
+            User user = _UserRepository.GetUserByEmail(command.Email);
+
+            user.FirstName = command.FirstName;
+            user.LastName = command.LastName;
+            user.Country = command.Country;
+
+            _UserRepository.Update(user);
+        }
+
+        public void UpdatePassword(UpdatePasswordUserCommand command)
+        {
+            User user = _UserRepository.GetUserByEmail(command.Email);
+
+            user.PasswordHash = BCryptNet.HashPassword(command.Password);
+
+            _UserRepository.Update(user);
         }
     }
 }
