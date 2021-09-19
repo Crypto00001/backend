@@ -43,7 +43,7 @@ namespace Pandora.Infrastructure.Base
             return _context.Set<T>().FirstOrDefault(q => q.Id == id);
         }
 
-        public List<T> Get()
+        public List<T> GetAll()
         {
             return _context.Set<T>().ToList();
         }
