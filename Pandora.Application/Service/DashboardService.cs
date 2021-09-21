@@ -19,7 +19,7 @@ namespace Pandora.Application.Service
 
         public List<DashboardViewModel> GetAll()
         {
-            return _dashboardRepository.Get().Select(q => new DashboardViewModel
+            return _dashboardRepository.GetAll().Select(q => new DashboardViewModel
             {
                 ItemName = q.ItemName,
                 ItemValue = q.ItemValue

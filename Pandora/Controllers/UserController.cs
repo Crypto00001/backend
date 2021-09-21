@@ -25,17 +25,32 @@ namespace Pandora.Controllers
         }
         [AllowAnonymous]
         [HttpPost("Login")]
-        public IActionResult Login(LoginCommand command)
+        public ResultResponse Login(LoginCommand command)
         {
-            var user = _userService.Authenticate(command);
-            AuthenticateResponse response = new AuthenticateResponse()
+            try
             {
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Token = _jwtUtils.GenerateToken(user)
-            };
-            return Ok(response);
+                var user = _userService.Authenticate(command);
+                AuthenticateResponse response = new AuthenticateResponse()
+                {
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Token = _jwtUtils.GenerateToken(user)
+                };
+                return new ResultResponse
+                {
+                    HasError = false,
+                    Data = response
+                };
+            }
+            catch (Exception e)
+            {
+                return new ResultResponse
+                {
+                    HasError = true,
+                    ErrorMessage = e.Message
+                };
+            }
         }
 
         [AllowAnonymous]
@@ -59,10 +74,11 @@ namespace Pandora.Controllers
         {
             try
             {
-                _userService.Update(command);
+                var user = _userService.Update(command, UserSession.UserId);
                 return new ResultResponse
                 {
-                    HasError = false
+                    HasError = false,
+                    Data = user
                 };
             }
             catch (Exception e)
@@ -81,7 +97,7 @@ namespace Pandora.Controllers
         {
             try
             {
-                _userService.UpdatePassword(command);
+                _userService.UpdatePassword(command, UserSession.UserId);
                 return new ResultResponse
                 {
                     HasError = false

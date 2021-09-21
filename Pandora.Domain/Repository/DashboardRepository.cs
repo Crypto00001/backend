@@ -6,7 +6,7 @@ namespace Pandora.Domain.Repository
 {
     public interface DashboardRepository
     {
-        List<Dashboard> Get();
+        List<Dashboard> GetAll();
 
     }
 }

@@ -23,6 +23,7 @@ namespace Pandora.Middleware
             if (userId != null)
             {
                 // attach user to context on successful jwt validation
+                UserSession.UserId = userId.Value;
                 context.Items["User"] = userService.GetById(userId.Value);
             }
 
