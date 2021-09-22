@@ -6,6 +6,7 @@ using Pandora.Application.Contract;
 using System;
 using System.Linq;
 using Pandora.Application.ViewModel;
+using System.Threading.Tasks;
 
 namespace Pandora.Application.Service
 {
@@ -17,9 +18,9 @@ namespace Pandora.Application.Service
             _dashboardRepository = dashboardRepository;
         }
 
-        public List<DashboardViewModel> GetAll()
+        public async Task<List<DashboardViewModel>> GetAll()
         {
-            return _dashboardRepository.GetAll().Select(q => new DashboardViewModel
+            return (await _dashboardRepository.GetAll()).Select(q => new DashboardViewModel
             {
                 ItemName = q.ItemName,
                 ItemValue = q.ItemValue

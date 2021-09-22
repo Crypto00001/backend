@@ -45,9 +45,11 @@ namespace Pandora
             services.AddScoped<IJwtUtils, JwtUtils>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IDashboardService, DashboardService>();
+            services.AddScoped<IReferralService, ReferralService>();
 
             services.AddScoped<UserRepository, EfUserRepository>();
             services.AddScoped<DashboardRepository, EfDashboardRepository>();
+            services.AddScoped<ReferralRepository, EfReferralRepository>();
 
         }
 

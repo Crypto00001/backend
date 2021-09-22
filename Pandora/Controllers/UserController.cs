@@ -25,11 +25,11 @@ namespace Pandora.Controllers
         }
         [AllowAnonymous]
         [HttpPost("Login")]
-        public ResultResponse Login(LoginCommand command)
+        public async Task<Result> Login(LoginCommand command)
         {
             try
             {
-                var user = _userService.Authenticate(command);
+                var user = await _userService.Authenticate(command);
                 AuthenticateResponse response = new AuthenticateResponse()
                 {
                     Email = user.Email,
@@ -37,7 +37,7 @@ namespace Pandora.Controllers
                     LastName = user.LastName,
                     Token = _jwtUtils.GenerateToken(user)
                 };
-                return new ResultResponse
+                return new Result
                 {
                     HasError = false,
                     Data = response
@@ -45,7 +45,7 @@ namespace Pandora.Controllers
             }
             catch (Exception e)
             {
-                return new ResultResponse
+                return new Result
                 {
                     HasError = true,
                     ErrorMessage = e.Message
@@ -56,26 +56,26 @@ namespace Pandora.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("Register")]
-        public IActionResult Register(CreateUserCommand command)
+        public async Task<IActionResult> RegisterAsync(CreateUserCommand command)
         {
-            _userService.Add(command);
+            await _userService.CreateAsync(command);
             return Ok(new { message = "Registration successful" });
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var users = _userService.GetAll();
+            var users = await _userService.GetAll();
             return Ok(users);
         }
 
         [HttpPut]
-        public ResultResponse Update(UpdateUserCommand command)
+        public async Task<Result> UpdateAsync(UpdateUserCommand command)
         {
             try
             {
-                var user = _userService.Update(command, UserSession.UserId);
-                return new ResultResponse
+                var user = await _userService.UpdateAsync(command, UserSession.UserId);
+                return new Result
                 {
                     HasError = false,
                     Data = user
@@ -83,7 +83,7 @@ namespace Pandora.Controllers
             }
             catch (Exception e)
             {
-                return new ResultResponse
+                return new Result
                 {
                     HasError = true,
                     ErrorMessage = e.Message
@@ -93,19 +93,19 @@ namespace Pandora.Controllers
 
         [HttpPut]
         [Route("Password")]
-        public ResultResponse UpdatePassword(UpdatePasswordUserCommand command)
+        public async Task<Result> UpdatePasswordAsync(UpdatePasswordUserCommand command)
         {
             try
             {
-                _userService.UpdatePassword(command, UserSession.UserId);
-                return new ResultResponse
+                await _userService.UpdatePassword(command, UserSession.UserId);
+                return new Result
                 {
                     HasError = false
                 };
             }
             catch (Exception e)
             {
-                return new ResultResponse
+                return new Result
                 {
                     HasError = true,
                     ErrorMessage = e.Message

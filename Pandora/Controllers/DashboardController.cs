@@ -21,9 +21,9 @@ namespace Pandora.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var dashboards = _dashboardService.GetAll();
+            var dashboards = await _dashboardService.GetAll();
             return Ok(dashboards);
         }
 

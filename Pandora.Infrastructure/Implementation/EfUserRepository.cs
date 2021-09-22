@@ -1,9 +1,10 @@
-﻿using Pandora.Domain.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using Pandora.Domain.Domain;
 using Pandora.Domain.Repository;
 using Pandora.Infrastructure.Base;
 using Pandora.Infrastructure.Context;
 using System;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pandora.Infrastructure.Implementation
 {
@@ -13,14 +14,14 @@ namespace Pandora.Infrastructure.Implementation
         {
         }
 
-        public User GetUserByEmail(string email)
+        public async Task<User> GetUserByEmail(string email)
         {
-            return _context.Set<User>().SingleOrDefault(q => q.Email == email);
+            return await _context.Set<User>().SingleOrDefaultAsync(q => q.Email == email);
         }
 
-        public bool HasUserByEmail(string email)
+        public async Task<bool> HasUserByEmail(string email)
         {
-            return _context.Set<User>().Any(q => q.Email == email);
+            return await _context.Set<User>().AnyAsync(q => q.Email == email);
         }
     }
 }

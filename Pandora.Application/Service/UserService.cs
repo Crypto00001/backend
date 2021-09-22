@@ -6,61 +6,62 @@ using System.Collections.Generic;
 using Pandora.Application.Contract;
 using System;
 using Pandora.Application.ViewModel;
+using System.Threading.Tasks;
 
 namespace Pandora.Application.Service
 {
     public class UserService : IUserService
     {
-        private readonly UserRepository _UserRepository;
-        public UserService(UserRepository UserRepository)
+        private readonly UserRepository _userRepository;
+        public UserService(UserRepository userRepository)
         {
-            _UserRepository = UserRepository;
+            _userRepository = userRepository;
         }
 
-        public void Add(CreateUserCommand command)
+        public async Task CreateAsync(CreateUserCommand command)
         {
-            if (_UserRepository.HasUserByEmail(command.Email))
+            if (await _userRepository.HasUserByEmail(command.Email))
                 throw new AppException("Email '" + command.Email + "' is already taken");
 
             User user = command.ToUser();
             user.PasswordHash = BCryptNet.HashPassword(command.Password);
 
-            _UserRepository.Add(user);
+            await _userRepository.Add(user);
         }
-        public User Authenticate(LoginCommand model)
+        public async Task<User> Authenticate(LoginCommand model)
         {
-            var user = _UserRepository.GetUserByEmail(model.Email);
+            var user = await _userRepository.GetUserByEmail(model.Email);
 
             if (user == null || !BCryptNet.Verify(model.Password, user.PasswordHash))
                 throw new AppException("Username or password is incorrect");
 
             return user;
         }
-        public User GetById(Guid UserId)
+        public async Task<User> GetById(Guid UserId)
         {
-            return _UserRepository.Get(UserId);
+            return await _userRepository.Get(UserId);
         }
 
-        public List<User> GetAll()
+        public async Task<List<User>> GetAll()
         {
-            return _UserRepository.GetAll();
+            return await _userRepository.GetAll();
         }
 
-        public void Remove(RemoveUserCommand command)
+        public async Task Remove(RemoveUserCommand command)
         {
-            _UserRepository.Remove(command.Id);
+            await _userRepository.Remove(command.Id);
         }
 
-        public UserViewModel Update(UpdateUserCommand command, Guid userId)
+        public async Task<UserViewModel> UpdateAsync(UpdateUserCommand command, Guid userId)
         {
-            User user = _UserRepository.Get(userId);
+            User user = await _userRepository.Get(userId);
 
             user.FirstName = command.FirstName;
             user.LastName = command.LastName;
             user.Country = command.Country;
             user.Email = command.Email;
 
-            _UserRepository.Update(user);
+            await _userRepository.Update(user);
             return new UserViewModel()
             {
                 Email = user.Email,
@@ -70,16 +71,16 @@ namespace Pandora.Application.Service
             };
         }
 
-        public void UpdatePassword(UpdatePasswordUserCommand command, Guid userId)
+        public async Task UpdatePassword(UpdatePasswordUserCommand command, Guid userId)
         {
-            User user = _UserRepository.Get(userId);
+            User user = await _userRepository.Get(userId);
 
             if (!BCryptNet.Verify(command.OldPassword, user.PasswordHash))
                 throw new AppException("OldPassword is incorrect");
 
             user.PasswordHash = BCryptNet.HashPassword(command.NewPassword);
 
-            _UserRepository.Update(user);
+            await _userRepository.Update(user);
         }
     }
 }

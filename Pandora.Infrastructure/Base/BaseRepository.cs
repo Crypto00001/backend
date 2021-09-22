@@ -9,12 +9,12 @@ namespace Pandora.Infrastructure.Base
 {
     public interface BaseRepository<T> where T : BaseEntity
     {
-        void Add(T entity);
-        void Update(T entity);
-        void Remove(Guid id);
-        void Remove(T entity);
+        Task Add(T entity);
+        Task Update(T entity);
+        Task Remove(Guid id);
+        Task Remove(T entity);
 
-        T Get(Guid id);
-        List<T> GetAll();
+        Task<T> Get(Guid id);
+        Task<List<T>> GetAll();
     }
 }

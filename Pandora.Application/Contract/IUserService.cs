@@ -11,12 +11,12 @@ namespace Pandora.Application.Contract
 {
     public interface IUserService
     {
-        void Add(CreateUserCommand command);
-        UserViewModel Update(UpdateUserCommand command, Guid userId);
-        void UpdatePassword(UpdatePasswordUserCommand command, Guid userId);
-        User Authenticate(LoginCommand model);
-        User GetById(Guid userId);
-        List<User> GetAll();
-        void Remove(RemoveUserCommand command);
+        Task CreateAsync(CreateUserCommand command);
+        Task<UserViewModel> UpdateAsync(UpdateUserCommand command, Guid userId);
+        Task UpdatePassword(UpdatePasswordUserCommand command, Guid userId);
+        Task<User> Authenticate(LoginCommand model);
+        Task<User> GetById(Guid userId);
+        Task<List<User>> GetAll();
+        Task Remove(RemoveUserCommand command);
     }
 }

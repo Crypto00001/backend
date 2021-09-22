@@ -3,6 +3,7 @@ using Pandora.Domain.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pandora.Infrastructure.Base
 {
@@ -25,7 +26,7 @@ namespace Pandora.Infrastructure.Base
                 return entities;
             }
         }
-        public void Add(T entity)
+        public async Task Add(T entity)
         {
             if (entity == null)
             {
@@ -34,21 +35,21 @@ namespace Pandora.Infrastructure.Base
             entity.Id = Guid.NewGuid();
             entity.CreateDate = DateTime.Now;
 
-            _context.Add(entity);
-            _context.SaveChanges();
+            await _context.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public T Get(Guid id)
+        public async Task<T> Get(Guid id)
         {
-            return _context.Set<T>().FirstOrDefault(q => q.Id == id);
+            return await _context.Set<T>().FirstOrDefaultAsync(q => q.Id == id);
         }
 
-        public List<T> GetAll()
+        public async Task<List<T>> GetAll()
         {
-            return _context.Set<T>().ToList();
+            return await _context.Set<T>().ToListAsync();
         }
 
-        public void Remove(T entity)
+        public async Task Remove(T entity)
         {
             if (entity == null)
             {
@@ -56,27 +57,27 @@ namespace Pandora.Infrastructure.Base
             }
 
             Entities.Remove(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Remove(Guid id)
+        public async Task Remove(Guid id)
         {
             T entity = new T()
             {
                 Id = id
             };
             _context.Set<T>().Remove(entity);
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(T entity)
+        public async Task Update(T entity)
         {
             if (entity == null)
             {
                 throw new ArgumentNullException();
             }
             _context.Update(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

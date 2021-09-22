@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Pandora.Domain.Domain;
 
 namespace Pandora.Domain.Repository
 {
     public interface UserRepository
     {
-        void Add(User User);
-        void Update(User User);
-        void Remove(Guid UserId);
-        User Get(Guid UserId);
-        bool HasUserByEmail(string email);
-        User GetUserByEmail(string email);
-        List<User> GetAll();
+        Task Add(User User);
+        Task Update(User User);
+        Task Remove(Guid UserId);
+        Task<User> Get(Guid UserId);
+        Task<bool> HasUserByEmail(string email);
+        Task<User> GetUserByEmail(string email);
+        Task<List<User>> GetAll();
 
     }
 }

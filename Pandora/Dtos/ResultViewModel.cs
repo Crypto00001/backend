@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Pandora.Application.ViewModel
 {
-    public class ResultResponse
+    public class Result
     {
         public object Data { get; set; }
         public bool HasError{ get; set; }
