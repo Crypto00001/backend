@@ -39,7 +39,7 @@ namespace Pandora.Application.Service
         }
         public async Task<User> GetById(Guid UserId)
         {
-            return await _userRepository.Get(UserId);
+            return await _userRepository.GetById(UserId);
         }
 
         public async Task<List<User>> GetAll()
@@ -54,7 +54,7 @@ namespace Pandora.Application.Service
 
         public async Task<UserViewModel> UpdateAsync(UpdateUserCommand command, Guid userId)
         {
-            User user = await _userRepository.Get(userId);
+            User user = await _userRepository.GetById(userId);
 
             user.FirstName = command.FirstName;
             user.LastName = command.LastName;
@@ -73,7 +73,7 @@ namespace Pandora.Application.Service
 
         public async Task UpdatePassword(UpdatePasswordUserCommand command, Guid userId)
         {
-            User user = await _userRepository.Get(userId);
+            User user = await _userRepository.GetById(userId);
 
             if (!BCryptNet.Verify(command.OldPassword, user.PasswordHash))
                 throw new AppException("OldPassword is incorrect");

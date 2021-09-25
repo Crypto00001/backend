@@ -1,4 +1,5 @@
 ﻿using Pandora.Application.Command.Referrals;
+using Pandora.Application.Command.UserPlans;
 using Pandora.Application.ViewModel;
 using Pandora.Domain.Domain;
 using System;
@@ -9,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Pandora.Application.Contract
 {
-    public interface IReferralService
+    public interface IUserPlanService
     {
-        Task CreateAsync(CreateReferralCommand command, Guid userId);
-        Task<List<ReferralViewModel>> GetAll(Guid userId);
+        Task<UserPlan> GetById(Guid userId);
+        Task CreateAsync(CreateUserPlanCommand command, Guid userId);
     }
 }

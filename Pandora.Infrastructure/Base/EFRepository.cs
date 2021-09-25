@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Pandora.Infrastructure.Base
 {
-    public class EFRepository<T> : BaseRepository<T> where T : BaseEntity, new()
+    public class EFRepository<T> where T : BaseEntity, new()
     {
         protected DbContext _context;
         private DbSet<T> entities;
@@ -39,7 +39,7 @@ namespace Pandora.Infrastructure.Base
             await _context.SaveChangesAsync();
         }
 
-        public async Task<T> Get(Guid id)
+        public async Task<T> GetById(Guid id)
         {
             return await _context.Set<T>().FirstOrDefaultAsync(q => q.Id == id);
         }

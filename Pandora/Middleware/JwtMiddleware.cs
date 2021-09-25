@@ -24,7 +24,7 @@ namespace Pandora.Middleware
             {
                 // attach user to context on successful jwt validation
                 UserSession.UserId = userId.Value;
-                context.Items["User"] = userService.GetById(userId.Value);
+                context.Items["User"] = await userService.GetById(userId.Value);
             }
 
             await _next(context);

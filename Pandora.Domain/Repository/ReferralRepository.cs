@@ -10,6 +10,8 @@ namespace Pandora.Domain.Repository
         Task Add(Referral referral);
         Task<Referral> GetByReferralCode(string referralCode);
         Task<bool> HasReferralByEmail(string email);
+        Task<bool> IsReferralLimitationFull(Guid userId);
+        Task<List<Referral>> GetAll(Guid userId);
         Task Remove(Guid UserId);
     }
 }

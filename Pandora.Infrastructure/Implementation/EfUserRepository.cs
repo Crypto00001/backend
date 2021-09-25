@@ -16,7 +16,7 @@ namespace Pandora.Infrastructure.Implementation
 
         public async Task<User> GetUserByEmail(string email)
         {
-            return await _context.Set<User>().SingleOrDefaultAsync(q => q.Email == email);
+            return await _context.Set<User>().FirstOrDefaultAsync(q => q.Email == email);
         }
 
         public async Task<bool> HasUserByEmail(string email)

@@ -9,6 +9,7 @@ using Pandora.Application.ViewModel;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Mail;
+using System.Linq;
 
 namespace Pandora.Application.Service
 {
@@ -24,6 +25,9 @@ namespace Pandora.Application.Service
         {
             if (await _referralRepository.HasReferralByEmail(command.Email))
                 throw new AppException("This Email Address has recently been invited");
+
+            if (await _referralRepository.IsReferralLimitationFull(userId))
+                throw new AppException("You could not invite more than five people");
 
             Referral referral = new Referral()
             {
@@ -70,6 +74,14 @@ namespace Pandora.Application.Service
                 result = generator.Next(0, 1000000).ToString("D6");
             } while (await _referralRepository.GetByReferralCode(result) != null);
             return result;
+        }
+
+        public async Task<List<ReferralViewModel>> GetAll(Guid userId)
+        {
+            return (await _referralRepository.GetAll(userId)).Select(q => new ReferralViewModel
+            {
+                Email = q.Email
+            }).ToList();
         }
     }
 }

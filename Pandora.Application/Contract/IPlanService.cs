@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 
 namespace Pandora.Application.Contract
 {
-    public interface IReferralService
+    public interface IPlanService
     {
-        Task CreateAsync(CreateReferralCommand command, Guid userId);
-        Task<List<ReferralViewModel>> GetAll(Guid userId);
+        Task<Guid> GetByName(string planName);
     }
 }

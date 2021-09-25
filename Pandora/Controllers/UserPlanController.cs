@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pandora.Application.Command.Referrals;
+using Pandora.Application.Command.UserPlans;
 using Pandora.Application.Contract;
 using Pandora.Application.Service;
 using Pandora.Application.ViewModel;
@@ -14,21 +14,20 @@ namespace Pandora.Controllers
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class ReferralController : Controller
+    public class UserPlanController : Controller
     {
-        private readonly IReferralService _referralService;
-        public ReferralController(IReferralService referralService)
+        private readonly IUserPlanService _userPlanService;
+        public UserPlanController(IUserPlanService userPlanService)
         {
-            _referralService = referralService;
+            _userPlanService = userPlanService;
         }
-       
         [AllowAnonymous]
         [HttpPost]
-        public async Task<Result> CreateAsync(CreateReferralCommand command)
+        public async Task<Result> CreateAsync(CreateUserPlanCommand command)
         {
             try
             {
-                await _referralService.CreateAsync(command, UserSession.UserId);
+                await _userPlanService.CreateAsync(command, UserSession.UserId);
                 return new Result
                 {
                     HasError = false
@@ -49,11 +48,11 @@ namespace Pandora.Controllers
         {
             try
             {
-                var referrals = await _referralService.GetAll(UserSession.UserId);
+                var userPlans = await _userPlanService.GetById(UserSession.UserId);
                 return new Result
                 {
                     HasError = false,
-                    Data= referrals
+                    Data= userPlans
                 };
             }
             catch (Exception e)
