@@ -8,6 +8,7 @@ namespace Pandora.Domain.Domain
         public string Name { get; set; }
         public int ProfitPercent { get; set; }
         public int MinimumDeposit { get; set; }
-        
+        public int Duration { get; set; }
+
     }
 }

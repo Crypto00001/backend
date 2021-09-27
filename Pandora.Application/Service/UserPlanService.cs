@@ -8,6 +8,7 @@ using System.Linq;
 using Pandora.Application.ViewModel;
 using System.Threading.Tasks;
 using Pandora.Application.Command.UserPlans;
+using Pandora.Application.Enums;
 
 namespace Pandora.Application.Service
 {
@@ -26,16 +27,20 @@ namespace Pandora.Application.Service
         public async Task CreateAsync(CreateUserPlanCommand command, Guid userId)
         {
             var wallet = await _walletRepository.GetUserWalletBalanceByType(userId, (int)command.WalletType);
-            if (wallet.AvailableBalance > command.InvestmentAmount)
+            if (command.InvestmentAmount > wallet.AvailableBalance)
                 throw new AppException("There is not enough balance");
+            var planId = await _planRepository.GetPlanByName(command.PlanName);
+            if (planId == Guid.Empty)
+                throw new AppException("This plan does not exist");
 
             UserPlan userPlan = new UserPlan()
             {
                 AccruedProfit = 0,
+                WalletType = wallet.Type,
                 InvestmentAmount = command.InvestmentAmount,
                 IsActive = true,
                 UserId = userId,
-                PlanId = await _planRepository.GetPlanByName(command.PlanName)
+                PlanId = planId
             };
 
             await _userPlanRepository.Add(userPlan);
@@ -45,9 +50,21 @@ namespace Pandora.Application.Service
             await _walletRepository.Update(wallet);
         }
 
-        public Task<UserPlan> GetById(Guid userId)
+        public async Task<IEnumerable<UserPlanReportViewModel>> GetAll(Guid userId)
         {
-            throw new NotImplementedException();
+            return (await _userPlanRepository.GetAll(userId)).Select(q => new UserPlanReportViewModel
+            {
+                CurrencyName = Enum.GetName(typeof(WalletType), q.WalletType),
+                AccruedProfit = q.AccruedProfit,
+                StartDate = q.StartDate.ToString("yyyy-mm-dd"),
+                InvestmentAmount = q.InvestmentAmount,
+                IsActive = q.IsActive,
+                EndDate = q.StartDate.AddMonths(q.Duration).ToString("yyyy-mm-dd"),
+                PlanName = q.PlanName,
+                Progress = (int)Math.Floor(((DateTime.Now - q.StartDate).TotalDays / (q.StartDate.AddMonths(q.Duration) - q.StartDate).TotalDays) * 100),
+                ProfitPercent = q.ProfitPercent
+            }).OrderByDescending(o => o.StartDate);
         }
+
     }
 }

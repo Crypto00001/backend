@@ -10,6 +10,7 @@ namespace Pandora.Infrastructure.Config
         {
             builder.Property(c => c.AccruedProfit).IsRequired();
             builder.Property(c => c.InvestmentAmount).IsRequired();
+            builder.Property(c => c.WalletType).IsRequired();
             builder.Property(c => c.IsActive).IsRequired();
             builder.Property(c => c.PlanId).IsRequired();
             builder.Property(c => c.UserId).IsRequired();

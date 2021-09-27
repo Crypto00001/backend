@@ -12,7 +12,7 @@ namespace Pandora.Application.Contract
 {
     public interface IUserPlanService
     {
-        Task<UserPlan> GetById(Guid userId);
+        Task<IEnumerable<UserPlanReportViewModel>> GetAll(Guid userId);
         Task CreateAsync(CreateUserPlanCommand command, Guid userId);
     }
 }

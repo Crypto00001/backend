@@ -43,5 +43,49 @@ namespace Pandora.Controllers
                 };
             }
         }
+        [AllowAnonymous]
+        [HttpGet("Deposit")]
+        public async Task<Result> GetAllForDepositAsync()
+        {
+            try
+            {
+                var wallets = await _walletService.GetAllForDeposit(UserSession.UserId);
+                return new Result
+                {
+                    HasError = false,
+                    Data = wallets
+                };
+            }
+            catch (Exception e)
+            {
+                return new Result
+                {
+                    HasError = true,
+                    ErrorMessage = e.Message
+                };
+            }
+        }
+        [AllowAnonymous]
+        [HttpGet("Withdraw")]
+        public async Task<Result> GetAllForWithdrawAsync()
+        {
+            try
+            {
+                var wallets = await _walletService.GetAllForWithdraw(UserSession.UserId);
+                return new Result
+                {
+                    HasError = false,
+                    Data = wallets
+                };
+            }
+            catch (Exception e)
+            {
+                return new Result
+                {
+                    HasError = true,
+                    ErrorMessage = e.Message
+                };
+            }
+        }
     }
 }

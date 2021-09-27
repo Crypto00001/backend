@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pandora.Application.Enum
+namespace Pandora.Application.Enums
 {
     public enum WalletType
     {
         Bitcoin = 1,
         Etherium = 2,
-        LiteCoin = 3,
+        Litecoin = 3,
         Zcash = 4
     }
 }

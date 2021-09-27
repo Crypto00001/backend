@@ -11,6 +11,8 @@ namespace Pandora.Application.Contract
 {
     public interface IWalletService
     {
-        Task<List<WalletViewModel>> GetAll(Guid userId);
+        Task<IEnumerable<WalletViewModel>> GetAll(Guid userId);
+        Task<IEnumerable<WalletForDepositViewModel>> GetAllForDeposit(Guid userId);
+        Task<IEnumerable<WalletForWithdrawViewModel>> GetAllForWithdraw(Guid userId);
     }
 }

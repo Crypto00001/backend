@@ -8,7 +8,7 @@ namespace Pandora.Domain.Repository
 {
     public interface WalletRepository
     {
-        Task<IQueryable<Wallet>> GetAll(Guid userId);
+        Task<List<Wallet>> GetAll(Guid userId);
         Task<Wallet> GetUserWalletBalanceByType(Guid userId,int walletType);
         Task Update(Wallet wallet);
     }

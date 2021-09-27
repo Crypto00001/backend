@@ -48,7 +48,7 @@ namespace Pandora.Controllers
         {
             try
             {
-                var userPlans = await _userPlanService.GetById(UserSession.UserId);
+                var userPlans = await _userPlanService.GetAll(UserSession.UserId);
                 return new Result
                 {
                     HasError = false,

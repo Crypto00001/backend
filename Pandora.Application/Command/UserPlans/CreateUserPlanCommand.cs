@@ -1,4 +1,4 @@
-﻿using Pandora.Application.Enum;
+﻿using Pandora.Application.Enums;
 using Pandora.Domain.Domain;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,7 +11,7 @@ namespace Pandora.Application.Command.UserPlans
         [Required]
         public WalletType WalletType { get; set; }
         [Required]
-        public int InvestmentAmount { get; set; }
+        public decimal InvestmentAmount { get; set; }
 
     }
 }
