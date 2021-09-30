@@ -45,11 +45,17 @@ namespace Pandora.Controllers
             }
             catch (Exception e)
             {
-                return new Result
+                var result = new Result
                 {
                     HasError = true,
                     ErrorMessage = e.Message
                 };
+                if (e.Data.Contains("Captcha"))
+                {
+                    result.Captcha = (bool)e.Data["Captcha"];
+                }
+
+                return result;
             }
         }
 

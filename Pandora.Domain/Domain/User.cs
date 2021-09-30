@@ -11,6 +11,8 @@ namespace Pandora.Domain.Domain
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Country { get; set; }
-        
+        public DateTime? LastLoginAttemptAt { get; set; }
+        public int LoginFailedAttemptsCount { get; set; }
+
     }
 }

@@ -12,6 +12,8 @@ namespace Pandora.Application.Service
 {
     public class UserService : IUserService
     {
+        const int MaxNumberOfFailedAttemptsToLogin = 3;
+        const int BlockMinutesAfterLimitFailedAttemptsToLogin = 1;
         private readonly UserRepository _userRepository;
         public UserService(UserRepository userRepository)
         {
@@ -31,9 +33,32 @@ namespace Pandora.Application.Service
         public async Task<User> Authenticate(LoginCommand model)
         {
             var user = await _userRepository.GetUserByEmail(model.Email);
+            if (user == null)
+                throw new AppException("Invalid username or password");
 
             if (user == null || !BCryptNet.Verify(model.Password, user.PasswordHash))
-                throw new AppException("Username or password is incorrect");
+            {
+                user.LastLoginAttemptAt = DateTime.Now;
+                user.LoginFailedAttemptsCount++;
+                await _userRepository.Update(user);
+
+                if (user.LoginFailedAttemptsCount >= MaxNumberOfFailedAttemptsToLogin
+                    && user.LastLoginAttemptAt.HasValue
+                    && DateTime.Now < user.LastLoginAttemptAt.Value.AddMinutes(BlockMinutesAfterLimitFailedAttemptsToLogin))
+                {
+                    AppException exception = new AppException();
+                    exception.Data.Add("Captcha", true);
+                    throw exception;
+                }
+                
+                throw new AppException("Invalid username or password");
+            }
+            else
+            {
+                user.LoginFailedAttemptsCount = 0;
+                user.LastLoginAttemptAt = DateTime.Now;
+                await _userRepository.Update(user);
+            }
 
             return user;
         }

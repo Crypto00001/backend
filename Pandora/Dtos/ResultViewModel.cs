@@ -11,5 +11,6 @@ namespace Pandora.Application.ViewModel
         public object Data { get; set; }
         public bool HasError{ get; set; }
         public string ErrorMessage{ get; set; }
+        public bool Captcha { get; set; } = false;
     }
 }
