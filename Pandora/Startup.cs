@@ -49,6 +49,8 @@ namespace Pandora
             services.AddScoped<IPlanService, PlanService>();
             services.AddScoped<IWalletService, WalletService>();
             services.AddScoped<IUserPlanService, UserPlanService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IWithdrawalService, WithdrawalService>();
 
             services.AddScoped<UserRepository, EfUserRepository>();
             services.AddScoped<DashboardRepository, EfDashboardRepository>();
@@ -56,6 +58,8 @@ namespace Pandora
             services.AddScoped<PlanRepository, EfPlanRepository>();
             services.AddScoped<WalletRepository, EfWalletRepository>();
             services.AddScoped<UserPlanRepository, EfUserPlanRepository>();
+            services.AddScoped<PaymentRepository, EfPaymentRepository>();
+            services.AddScoped<WithdrawalRepository, EfWithdrawalRepository>();
 
         }
 
