@@ -9,6 +9,7 @@ namespace Pandora.Domain.Repository
     public interface PaymentRepository
     {
         Task Add(Payment referral);
+        Task<Payment> GetByPaymentNumber(string paymentNumber);
         Task<Payment> GetById(Guid paymentId);
     }
 }

@@ -8,7 +8,7 @@ namespace Pandora.Domain.Domain
         public Guid UserId { get; set; }
         public int WalletType { get; set; }
         public decimal Amount { get; set; }
-        public string WithdrawNumber { get; set; }
-
+        public string WithdrawalNumber { get; set; }
+        public string WalletAddress { get; set; }
     }
 }

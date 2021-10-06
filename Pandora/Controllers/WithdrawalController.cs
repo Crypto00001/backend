@@ -28,10 +28,11 @@ namespace Pandora.Controllers
         {
             try
             {
-                await _withdrawalService.CreateAsync(command,UserSession.UserId);
+                var data = await _withdrawalService.CreateAsync(command,UserSession.UserId);
                 return new Result
                 {
-                    HasError = false
+                    HasError = false,
+                    Data = data
                 };
             }
             catch (Exception e)

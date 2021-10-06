@@ -11,7 +11,7 @@ namespace Pandora.Application.Contract
 {
     public interface IWithdrawalService
     {
-        Task CreateAsync(CreateWithdrawalCommand command, Guid userId);
+        Task<WithdrawalViewModel> CreateAsync(CreateWithdrawalCommand command, Guid userId);
         Task<Withdrawal> GetById(Guid userId);
     }
 }

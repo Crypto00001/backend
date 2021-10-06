@@ -29,10 +29,11 @@ namespace Pandora.Controllers
         {
             try
             {
-                await _paymentService.CreateAsync(command,UserSession.UserId);
+                var data = await _paymentService.CreateAsync(command,UserSession.UserId);
                 return new Result
                 {
-                    HasError = false
+                    HasError = false,
+                    Data = data
                 };
             }
             catch (Exception e)

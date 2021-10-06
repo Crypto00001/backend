@@ -11,7 +11,7 @@ namespace Pandora.Application.Contract
 {
     public interface IPaymentService
     {
-        Task CreateAsync(CreatePaymentCommand command, Guid userId);
+        Task<PaymentViewModel> CreateAsync(CreatePaymentCommand command, Guid userId);
         Task<Payment> GetById(Guid userId);
     }
 }

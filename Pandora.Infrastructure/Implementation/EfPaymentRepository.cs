@@ -15,5 +15,9 @@ namespace Pandora.Infrastructure.Implementation
         public EfPaymentRepository(EFDbContext context) : base(context)
         {
         }
+        public async Task<Payment> GetByPaymentNumber(string paymentNumber)
+        {
+           return await _context.Set<Payment>().FirstOrDefaultAsync(q => q.PaymentNumber == paymentNumber);
+        }
     }
 }

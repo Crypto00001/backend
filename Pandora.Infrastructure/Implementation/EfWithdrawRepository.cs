@@ -15,5 +15,9 @@ namespace Pandora.Infrastructure.Implementation
         public EfWithdrawalRepository(EFDbContext context) : base(context)
         {
         }
+        public async Task<Withdrawal> GetByWithdrawalNumber(string withdrawalNumber)
+        {
+           return await _context.Set<Withdrawal>().FirstOrDefaultAsync(q => q.WithdrawalNumber == withdrawalNumber);
+        }
     }
 }

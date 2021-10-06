@@ -9,6 +9,8 @@ namespace Pandora.Application.Command.Withdraws
         public int WalletType { get; set; }
         [Required]
         public decimal Amount { get; set; }
+        [Required]
+        public string WalletAddress { get; set; }
 
     }
 }
