@@ -16,15 +16,22 @@ namespace Pandora.Application.Service
     public class ReferralService : IReferralService
     {
         private readonly ReferralRepository _referralRepository;
-        public ReferralService(ReferralRepository ReferralRepository)
+        private readonly UserRepository _userRepository;
+        public ReferralService(ReferralRepository referralRepository, UserRepository userRepository)
         {
-            _referralRepository = ReferralRepository;
+            _referralRepository = referralRepository;
+            _userRepository = userRepository;
         }
 
         public async Task CreateAsync(CreateReferralCommand command, Guid userId)
         {
+            var user = await _userRepository.GetById(userId);
+
             if (await _referralRepository.HasReferralByEmail(command.Email))
                 throw new AppException("This Email Address has recently been invited");
+
+            if (user.Email==command.Email || await _userRepository.HasUserByEmail(command.Email))
+                throw new AppException("This Email Address is reserved");
 
             if (await _referralRepository.IsReferralLimitationFull(userId))
                 throw new AppException("You could not invite more than five people");
@@ -39,7 +46,7 @@ namespace Pandora.Application.Service
             await _referralRepository.Add(referral);
             try
             {
-                await SendInvitation("sasantrader002@gmail.com");
+                await SendInvitation(referral);
             }
             catch (Exception e)
             {
@@ -48,16 +55,16 @@ namespace Pandora.Application.Service
             }
         }
 
-        private async Task SendInvitation(string email)
+        private async Task SendInvitation(Referral referral)
         {
 
             MailMessage message = new MailMessage();
             SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
             message.From = new MailAddress("sasantrader001@gmail.com");
-            message.To.Add(new MailAddress(email));
+            message.To.Add(new MailAddress(referral.Email));
             message.Subject = "Test";
             message.IsBodyHtml = false; //to make message body as html  
-            message.Body = "This is test mail";
+            message.Body = "http://localhost:4200/register/?referralCode=" + referral.ReferralCode;
             smtp.EnableSsl = true;
             smtp.UseDefaultCredentials = false;
             smtp.Credentials = new NetworkCredential("sasantrader001@gmail.com", "trading@1");

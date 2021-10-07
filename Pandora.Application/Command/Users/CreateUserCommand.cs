@@ -5,21 +5,24 @@ namespace Pandora.Application.Command.Users
 {
     public class CreateUserCommand
     {
-        [Required]
-        [StringLength(250, MinimumLength = 10)]
+        [Required(ErrorMessage = "Email is required")]
+        [StringLength(50, ErrorMessage = "Must be between 6 and 50 characters", MinimumLength = 6)]
+        [RegularExpression("^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$", ErrorMessage = "Must be a valid email")]
         public string Email { get; set; }
-        [Required]
-        [StringLength(100, MinimumLength = 6)]
+
+        [Required(ErrorMessage = "Password is required")]
+        [StringLength(30, ErrorMessage = "Must be between 6 and 30 characters", MinimumLength = 6)]
         public string Password { get; set; }
-        [Required]
-        [StringLength(250)]
+
+        [Required(ErrorMessage = "FirstName is required")]
         public string FirstName { get; set; }
-        [Required]
-        [StringLength(150)]
+
+        [Required(ErrorMessage = "LastName is required")]
         public string LastName { get; set; }
-        [Required]
-        [StringLength(100)]
+
+        [Required(ErrorMessage = "Country is required")]
         public string Country { get; set; }
+
         public User ToUser() => new User
         {
             PasswordHash = Password,

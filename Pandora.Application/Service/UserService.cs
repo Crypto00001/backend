@@ -7,6 +7,8 @@ using Pandora.Application.Contract;
 using System;
 using Pandora.Application.ViewModel;
 using System.Threading.Tasks;
+using System.Net;
+using System.Net.Mail;
 
 namespace Pandora.Application.Service
 {
@@ -20,12 +22,13 @@ namespace Pandora.Application.Service
             _userRepository = userRepository;
         }
 
-        public async Task CreateAsync(CreateUserCommand command)
+        public async Task CreateAsync(CreateUserCommand command, string referralCode)
         {
             if (await _userRepository.HasUserByEmail(command.Email))
                 throw new AppException("Email '" + command.Email + "' is already taken");
 
             User user = command.ToUser();
+            user.ReferralCode = referralCode;
             user.PasswordHash = BCryptNet.HashPassword(command.Password);
 
             await _userRepository.Add(user);
@@ -102,6 +105,53 @@ namespace Pandora.Application.Service
 
             if (!BCryptNet.Verify(command.OldPassword, user.PasswordHash))
                 throw new AppException("OldPassword is incorrect");
+
+            user.PasswordHash = BCryptNet.HashPassword(command.NewPassword);
+
+            await _userRepository.Update(user);
+        }
+
+        public async Task ResetPasswordRequest(ResetPasswordRequestCommand command)
+        {
+            User user = await _userRepository.GetUserByEmail(command.Email);
+
+            if (user==null)
+                throw new AppException("Email address has not registered");
+            
+            Random generator = new Random();
+            var resetPasswordCode=generator.Next(0, 1000000).ToString("D6");
+            SendResetPasswordCode(command.Email, resetPasswordCode);
+
+            user.ResetPasswordCode = resetPasswordCode;
+            await _userRepository.Update(user);
+        }
+
+        private async Task SendResetPasswordCode(string email, string code)
+        {
+
+            MailMessage message = new MailMessage();
+            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+            message.From = new MailAddress("sasantrader001@gmail.com");
+            message.To.Add(new MailAddress(email));
+            message.Subject = "Test";
+            message.IsBodyHtml = false; //to make message body as html  
+            message.Body = code;
+            smtp.EnableSsl = true;
+            smtp.UseDefaultCredentials = false;
+            smtp.Credentials = new NetworkCredential("sasantrader001@gmail.com", "trading@1");
+            await smtp.SendMailAsync(message);
+
+        }
+
+        public async Task DoResetPassword(DoResetPasswordCommand command)
+        {
+            User user = await _userRepository.GetUserByEmail(command.Email);
+
+            if (user==null)
+                throw new AppException("Email address has not registered");
+
+            if (user.ResetPasswordCode!=command.ResetCode)
+                throw new AppException("Reset code is not correct");
 
             user.PasswordHash = BCryptNet.HashPassword(command.NewPassword);
 

@@ -15,6 +15,8 @@ namespace Pandora.Infrastructure.Config
             builder.Property(c => c.Country).IsRequired();
             builder.Property(c => c.LastLoginAttemptAt);
             builder.Property(c => c.LoginFailedAttemptsCount);
+            builder.Property(c => c.ReferralCode);
+            builder.Property(c => c.ResetPasswordCode);
 
             builder.ToTable("User");
         }

@@ -4,16 +4,18 @@ namespace Pandora.Application.Command.Users
 {
     public class UpdateUserCommand
     {
-        [Required]
-        [StringLength(50, MinimumLength = 10)]
+        [Required(ErrorMessage = "Email is required")]
+        [StringLength(50, ErrorMessage = "Must be between 6 and 50 characters", MinimumLength = 6)]
+        [RegularExpression("^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$", ErrorMessage = "Must be a valid email")]
         public string Email { get; set; }
-        [StringLength(30)]
+
+        [Required(ErrorMessage = "FirstName is required")]
         public string FirstName { get; set; }
-        [Required]
-        [StringLength(50)]
+
+        [Required(ErrorMessage = "LastName is required")]
         public string LastName { get; set; }
-        [Required]
-        [StringLength(30)]
+
+        [Required(ErrorMessage = "Country is required")]
         public string Country { get; set; }
 
     }    

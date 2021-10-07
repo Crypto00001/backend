@@ -62,10 +62,26 @@ namespace Pandora.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> RegisterAsync(CreateUserCommand command)
+        public async Task<Result> RegisterAsync(CreateUserCommand command, string referralCode)
         {
-            await _userService.CreateAsync(command);
-            return Ok(new { message = "Registration successful" });
+            try
+            {
+                await _userService.CreateAsync(command,referralCode);
+                return new Result
+                {
+                    HasError = false
+                };
+            }
+            catch (Exception e)
+            {
+                var result = new Result
+                {
+                    HasError = true,
+                    ErrorMessage = e.Message
+                };
+
+                return result;
+            }
         }
 
         [HttpGet]
@@ -104,6 +120,51 @@ namespace Pandora.Controllers
             try
             {
                 await _userService.UpdatePassword(command, UserSession.UserId);
+                return new Result
+                {
+                    HasError = false
+                };
+            }
+            catch (Exception e)
+            {
+                return new Result
+                {
+                    HasError = true,
+                    ErrorMessage = e.Message
+                };
+            }
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("ResetPasswordRequest")]
+        public async Task<Result> ResetPasswordRequestAsync(ResetPasswordRequestCommand command)
+        {
+            try
+            {
+                await _userService.ResetPasswordRequest(command);
+                return new Result
+                {
+                    HasError = false
+                };
+            }
+            catch (Exception e)
+            {
+                return new Result
+                {
+                    HasError = true,
+                    ErrorMessage = e.Message
+                };
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("DoResetPassword")]
+        public async Task<Result> DoResetPasswordAsync(DoResetPasswordCommand command)
+        {
+            try
+            {
+                await _userService.DoResetPassword(command);
                 return new Result
                 {
                     HasError = false
