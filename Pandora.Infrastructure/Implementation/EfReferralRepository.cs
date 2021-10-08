@@ -19,7 +19,14 @@ namespace Pandora.Infrastructure.Implementation
         {
             return await _context.Set<Referral>().AnyAsync(q => q.Email == email);
         }
-
+        public async Task<Referral> GetReferralByEmail(string email)
+        {
+            return await _context.Set<Referral>().FirstOrDefaultAsync(q => q.Email == email);
+        }
+        public async Task<int> GetActiveInviteesCount(Guid userId)
+        {
+            return await _context.Set<Referral>().CountAsync(q => q.UserId == userId && q.HasInvested);
+        }
         public async Task<Referral> GetByReferralCode(string referralCode)
         {
             return await _context.Set<Referral>().FirstOrDefaultAsync(q => q.ReferralCode == referralCode);
@@ -27,7 +34,7 @@ namespace Pandora.Infrastructure.Implementation
 
         public async Task<bool> IsReferralLimitationFull(Guid userId)
         {
-            return await _context.Set<Referral>().CountAsync(q => q.UserId == userId) >= 5;
+            return await _context.Set<Referral>().CountAsync(q => q.UserId == userId) >= 30;
         }
 
         public async Task<List<Referral>> GetAll(Guid userId)

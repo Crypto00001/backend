@@ -49,7 +49,7 @@ namespace Pandora.Application.Service
                     && user.LastLoginAttemptAt.HasValue
                     && DateTime.Now < user.LastLoginAttemptAt.Value.AddMinutes(BlockMinutesAfterLimitFailedAttemptsToLogin))
                 {
-                    AppException exception = new AppException();
+                    AppException exception = new AppException("Invalid username or password");
                     exception.Data.Add("Captcha", true);
                     throw exception;
                 }
@@ -120,7 +120,7 @@ namespace Pandora.Application.Service
             
             Random generator = new Random();
             var resetPasswordCode=generator.Next(0, 1000000).ToString("D6");
-            SendResetPasswordCode(command.Email, resetPasswordCode);
+            await SendResetPasswordCode(command.Email, resetPasswordCode);
 
             user.ResetPasswordCode = resetPasswordCode;
             await _userRepository.Update(user);

@@ -34,13 +34,14 @@ namespace Pandora.Application.Service
                 throw new AppException("This Email Address is reserved");
 
             if (await _referralRepository.IsReferralLimitationFull(userId))
-                throw new AppException("You could not invite more than five people");
+                throw new AppException("You could not invite more than 30 people");
 
             Referral referral = new Referral()
             {
                 Email = command.Email,
                 ReferralCode = await GetRefferalCodeAsync(),
-                UserId = userId
+                UserId = userId,
+                HasInvested = false
             };
 
             await _referralRepository.Add(referral);
@@ -89,6 +90,10 @@ namespace Pandora.Application.Service
             {
                 Email = q.Email
             }).ToList();
+        }
+        public async Task<int> GetActiveInviteesCount(Guid userId)
+        {
+            return await _referralRepository.GetActiveInviteesCount(userId);
         }
     }
 }

@@ -13,5 +13,6 @@ namespace Pandora.Application.Contract
     {
         Task CreateAsync(CreateReferralCommand command, Guid userId);
         Task<List<ReferralViewModel>> GetAll(Guid userId);
+        Task<int> GetActiveInviteesCount(Guid userId);
     }
 }

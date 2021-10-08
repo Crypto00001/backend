@@ -45,15 +45,15 @@ namespace Pandora.Controllers
         }
         [AllowAnonymous]
         [HttpGet]
-        public async Task<Result> GetAllAsync()
+        public async Task<Result> GetActiveInviteesCountAsync()
         {
             try
             {
-                var referrals = await _referralService.GetAll(UserSession.UserId);
+                var count = await _referralService.GetActiveInviteesCount(UserSession.UserId);
                 return new Result
                 {
                     HasError = false,
-                    Data= referrals
+                    Data= count
                 };
             }
             catch (Exception e)

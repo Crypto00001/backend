@@ -9,6 +9,6 @@ namespace Pandora.Domain.Domain
         public Guid UserId { get; set; }
         public string ReferralCode { get; set; }
         public string Email { get; set; }
-        
+        public bool HasInvested { get; set; }
     }
 }

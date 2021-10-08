@@ -15,13 +15,21 @@ namespace Pandora.Application.Service
     public class UserPlanService : IUserPlanService
     {
         private readonly UserPlanRepository _userPlanRepository;
+        private readonly UserRepository _userRepository;
         private readonly PlanRepository _planRepository;
         private readonly WalletRepository _walletRepository;
-        public UserPlanService(UserPlanRepository userPlanRepository, PlanRepository planRepository, WalletRepository walletRepository)
+        private readonly ReferralRepository _refferalRepository;
+        public UserPlanService(UserPlanRepository userPlanRepository, 
+        PlanRepository planRepository, 
+        UserRepository userRepository, 
+        ReferralRepository referralRepository, 
+        WalletRepository walletRepository)
         {
             _userPlanRepository = userPlanRepository;
+            _userRepository = userRepository;
             _planRepository = planRepository;
             _walletRepository = walletRepository;
+            _refferalRepository = referralRepository;
         }
 
         public async Task CreateAsync(CreateUserPlanCommand command, Guid userId)
@@ -44,10 +52,19 @@ namespace Pandora.Application.Service
             };
 
             await _userPlanRepository.Add(userPlan);
+            
 
             wallet.AvailableBalance -= command.InvestmentAmount;
             wallet.InvestedBalance += command.InvestmentAmount;
             await _walletRepository.Update(wallet);
+
+            var user = await _userRepository.GetById(userId);
+            var refferal = await _refferalRepository.GetReferralByEmail(user.Email);
+            if(!refferal.HasInvested)
+            {
+                refferal.HasInvested = true;
+                await _refferalRepository.Update(refferal);
+            }
         }
 
         public async Task<IEnumerable<UserPlanReportViewModel>> GetAll(Guid userId)

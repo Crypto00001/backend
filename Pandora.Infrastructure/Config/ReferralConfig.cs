@@ -10,6 +10,7 @@ namespace Pandora.Infrastructure.Config
         {
             builder.Property(c => c.ReferralCode).IsRequired();
             builder.Property(c => c.Email).IsRequired();
+            builder.Property(c => c.HasInvested).IsRequired();
 
             builder.ToTable("Referral");
         }
