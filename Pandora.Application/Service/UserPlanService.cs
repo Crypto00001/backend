@@ -60,7 +60,7 @@ namespace Pandora.Application.Service
 
             var user = await _userRepository.GetById(userId);
             var refferal = await _refferalRepository.GetReferralByEmail(user.Email);
-            if(!refferal.HasInvested)
+            if(refferal!=null && !refferal.HasInvested)
             {
                 refferal.HasInvested = true;
                 await _refferalRepository.Update(refferal);

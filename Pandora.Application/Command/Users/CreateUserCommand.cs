@@ -15,12 +15,15 @@ namespace Pandora.Application.Command.Users
         public string Password { get; set; }
 
         [Required(ErrorMessage = "FirstName is required")]
+        [StringLength(50, ErrorMessage = "Must be maximum 50 characters")]
         public string FirstName { get; set; }
 
         [Required(ErrorMessage = "LastName is required")]
+        [StringLength(50, ErrorMessage = "Must be maximum 50 characters")]
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Country is required")]
+        [StringLength(50, ErrorMessage = "Must be maximum 50 characters")]
         public string Country { get; set; }
 
         public User ToUser() => new User

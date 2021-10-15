@@ -83,12 +83,29 @@ namespace Pandora.Controllers
                 return result;
             }
         }
-
+        [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<Result> GetUserAsync()
         {
-            var users = await _userService.GetAll();
-            return Ok(users);
+            try
+            {
+                var user = await _userService.GetCurrenctUserById(UserSession.UserId);
+                return new Result
+                {
+                    HasError = false,
+                     Data = user
+                };
+            }
+            catch (Exception e)
+            {
+                var result = new Result
+                {
+                    HasError = true,
+                    ErrorMessage = e.Message
+                };
+
+                return result;
+            }
         }
 
         [HttpPut]

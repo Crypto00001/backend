@@ -17,7 +17,8 @@ namespace Pandora.Application.Contract
         Task DoResetPassword(DoResetPasswordCommand command);
         Task ResetPasswordRequest(ResetPasswordRequestCommand command);
         Task<User> Authenticate(LoginCommand model);
-        Task<User> GetById(Guid userId);
+        Task<User> GetById(Guid UserId);
+        Task<UserViewModel> GetCurrenctUserById(Guid userId);
         Task<List<User>> GetAll();
         Task Remove(RemoveUserCommand command);
     }

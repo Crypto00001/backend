@@ -65,11 +65,23 @@ namespace Pandora.Application.Service
 
             return user;
         }
+        
         public async Task<User> GetById(Guid UserId)
         {
             return await _userRepository.GetById(UserId);
         }
 
+        public async Task<UserViewModel> GetCurrenctUserById(Guid userId)
+        {
+            User user = await _userRepository.GetById(userId);
+            return new UserViewModel()
+            {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Country = user.Country
+            };
+        }
         public async Task<List<User>> GetAll()
         {
             return await _userRepository.GetAll();

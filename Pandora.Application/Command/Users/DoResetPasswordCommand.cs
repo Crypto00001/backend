@@ -10,6 +10,7 @@ namespace Pandora.Application.Command.Users
         public string Email { get; set; }
         
         [Required(ErrorMessage = "ResetCode is required")]
+        [StringLength(50, ErrorMessage = "Must be maximum 50 characters")]
         public string ResetCode { get; set; }
 
         [Required(ErrorMessage = "NewPassword is required")]
