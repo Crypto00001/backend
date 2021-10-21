@@ -7,6 +7,6 @@ namespace Pandora.Domain.Repository
 {
     public interface PlanRepository
     {
-        Task<Guid> GetPlanByName(string planName);
+        Task<Plan> GetPlanByName(string planName);
     }
 }

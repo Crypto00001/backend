@@ -15,9 +15,9 @@ namespace Pandora.Infrastructure.Implementation
         {
         }
 
-        public async Task<Guid> GetPlanByName(string planName)
+        public async Task<Plan> GetPlanByName(string planName)
         {
-            return await _context.Set<Plan>().Where(q => q.Name == planName).Select(s => s.Id).FirstOrDefaultAsync();
+            return await _context.Set<Plan>().Where(q => q.Name == planName).FirstOrDefaultAsync();
         }
     }
 }

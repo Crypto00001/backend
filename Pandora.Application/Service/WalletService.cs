@@ -8,6 +8,7 @@ using System.Linq;
 using Pandora.Application.ViewModel;
 using System.Threading.Tasks;
 using Pandora.Application.Enums;
+using Pandora.Application.Scraper;
 
 namespace Pandora.Application.Service
 {
@@ -52,5 +53,6 @@ namespace Pandora.Application.Service
                 AvailableBalance = q.AvailableBalance
             }).OrderBy(o => o.WalletType);
         }
+
     }
 }

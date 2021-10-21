@@ -9,6 +9,7 @@ using Pandora.Application.ViewModel;
 using System.Threading.Tasks;
 using Pandora.Application.Command.UserPlans;
 using Pandora.Application.Enums;
+using Pandora.Application.Scraper;
 
 namespace Pandora.Application.Service
 {
@@ -37,10 +38,30 @@ namespace Pandora.Application.Service
             var wallet = await _walletRepository.GetUserWalletBalanceByType(userId, (int)command.WalletType);
             if (command.InvestmentAmount > wallet.AvailableBalance)
                 throw new AppException("There is not enough balance");
-            var planId = await _planRepository.GetPlanByName(command.PlanName);
-            if (planId == Guid.Empty)
+            var plan = await _planRepository.GetPlanByName(command.PlanName);
+            if (plan == null)
                 throw new AppException("This plan does not exist");
 
+            decimal latestPrice = 0;
+            switch (wallet.Type)
+            {
+                case (int)WalletType.Bitcoin:
+                    latestPrice=ScrapeManager.BitcoinPrice;
+                    break;
+                case (int)WalletType.Etherium:
+                    latestPrice=ScrapeManager.EtheriumPrice;
+                    break;
+                case (int)WalletType.Litecoin:
+                    latestPrice=ScrapeManager.LitecoinPrice;
+                    break;
+                case (int)WalletType.Zcash:
+                    latestPrice=ScrapeManager.ZCashPrice;
+                    break;
+            }
+            var dollarAInvestedAmount = command.InvestmentAmount * latestPrice;
+            if(dollarAInvestedAmount < plan.MinimumDeposit)
+                throw new AppException("The minimum invested amount for this plain is {0} dollars", plan.MinimumDeposit);
+            
             UserPlan userPlan = new UserPlan()
             {
                 AccruedProfit = 0,
@@ -48,7 +69,7 @@ namespace Pandora.Application.Service
                 InvestmentAmount = command.InvestmentAmount,
                 IsActive = true,
                 UserId = userId,
-                PlanId = planId
+                PlanId = plan.Id
             };
 
             await _userPlanRepository.Add(userPlan);

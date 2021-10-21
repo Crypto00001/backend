@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pandora.Application.Command.Users;
 using Pandora.Application.Contract;
+using Pandora.Application.Scraper;
 using Pandora.Application.Service;
 using Pandora.Application.ViewModel;
 using Pandora.Jwt;
@@ -37,6 +38,9 @@ namespace Pandora.Controllers
                     LastName = user.LastName,
                     Token = _jwtUtils.GenerateToken(user)
                 };
+
+               
+                ScrapeManager.UpdatePrices();
                 return new Result
                 {
                     HasError = false,
@@ -66,7 +70,7 @@ namespace Pandora.Controllers
         {
             try
             {
-                await _userService.CreateAsync(command,referralCode);
+                await _userService.CreateAsync(command, referralCode);
                 return new Result
                 {
                     HasError = false
@@ -93,7 +97,7 @@ namespace Pandora.Controllers
                 return new Result
                 {
                     HasError = false,
-                     Data = user
+                    Data = user
                 };
             }
             catch (Exception e)

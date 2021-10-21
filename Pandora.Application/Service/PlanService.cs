@@ -18,7 +18,7 @@ namespace Pandora.Application.Service
             _planRepository = planRepository;
         }
 
-        public async Task<Guid> GetByName(string planName)
+        public async Task<Plan> GetByName(string planName)
         {
             return await _planRepository.GetPlanByName(planName);
         }
