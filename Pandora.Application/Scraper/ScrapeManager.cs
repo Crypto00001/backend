@@ -53,6 +53,7 @@ namespace Pandora.Application.Scraper
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("no-sandbox");
             options.AddArgument("headless");
+
             driver = new ChromeDriver(Environment.CurrentDirectory, options, TimeSpan.FromMinutes(3));
         }
         public static async Task UpdatePrices()
@@ -105,10 +106,8 @@ namespace Pandora.Application.Scraper
                     }
                 }
                 }
-                catch (System.Exception)
+                catch (System.Exception e)
                 {
-                    
-                    throw;
                 }
             });
         }

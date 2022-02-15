@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Pandora.Application.Contract;
+using Pandora.Application.Scheduler;
+using Pandora.Application.Scheduler.Jobs;
 using Pandora.Application.Scraper;
 using Pandora.Application.Service;
 using Pandora.Domain.Repository;
@@ -13,6 +15,9 @@ using Pandora.Infrastructure.Context;
 using Pandora.Infrastructure.Implementation;
 using Pandora.Jwt;
 using Pandora.Middleware;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 
 namespace Pandora
 {
@@ -55,6 +60,21 @@ namespace Pandora
             services.AddScoped<PaymentRepository, EfPaymentRepository>();
             services.AddScoped<WithdrawalRepository, EfWithdrawalRepository>();
 
+            services.AddHostedService<QuartzHostedService>();
+            services.AddSingleton<IJobFactory, SingletonJobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+
+            services.AddScoped<UpdateUserPlanDailyJob>();
+            services.AddSingleton<UpdatePriceJob>();
+            services.AddSingleton<CheckTransactionConfirmJob>();
+
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(UpdateUserPlanDailyJob),
+                cronExpression: "0 0 0 * * ?"));
+
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(UpdatePriceJob),
+                cronExpression: "0 0/15 * * * ?")); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

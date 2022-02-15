@@ -35,5 +35,13 @@ namespace Pandora.Infrastructure.Implementation
                         };
             return await query.ToListAsync();
         }
+
+        public async Task<List<UserPlan>> GetAllActivePlans()
+        {
+            return await (from userPlan in _context.Set<UserPlan>()
+                          join plan in _context.Set<Plan>() on userPlan.PlanId equals plan.Id
+                          where userPlan.IsActive
+                          select userPlan).ToListAsync();
+        }
     }
 }

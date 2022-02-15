@@ -9,6 +9,8 @@ namespace Pandora.Domain.Repository
     public interface UserPlanRepository
     {
         Task Add(UserPlan referral);
+        Task Update(UserPlan referral);
         Task<List<UserPlanReportInfraViewModel>> GetAll(Guid userId);
+        Task<List<UserPlan>> GetAllActivePlans();
     }
 }

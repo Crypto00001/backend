@@ -9,6 +9,7 @@ using Pandora.Application.ViewModel;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Mail;
+using Pandora.Application.Enums;
 
 namespace Pandora.Application.Service
 {
@@ -17,9 +18,11 @@ namespace Pandora.Application.Service
         const int MaxNumberOfFailedAttemptsToLogin = 3;
         const int BlockMinutesAfterLimitFailedAttemptsToLogin = 1;
         private readonly UserRepository _userRepository;
-        public UserService(UserRepository userRepository)
+        private readonly WalletRepository _walletRepository;
+        public UserService(UserRepository userRepository, WalletRepository walletRepository)
         {
             _userRepository = userRepository;
+            _walletRepository = walletRepository;
         }
 
         public async Task CreateAsync(CreateUserCommand command, string referralCode)
@@ -32,6 +35,42 @@ namespace Pandora.Application.Service
             user.PasswordHash = BCryptNet.HashPassword(command.Password);
 
             await _userRepository.Add(user);
+            await _walletRepository.Add(new Wallet
+            {
+                Balance=2,
+                UserId= user.Id,
+                InvestedBalance =0,
+                Type= (int)WalletType.Bitcoin,
+                AvailableBalance = 2,
+                Address ="asdfasdfa"
+            });
+            await _walletRepository.Add(new Wallet
+            {
+                Balance = 1,
+                UserId = user.Id,
+                InvestedBalance = 0,
+                Type = (int)WalletType.Etherium,
+                AvailableBalance = 1,
+                Address = "asdfasdfa"
+            });
+            await _walletRepository.Add(new Wallet
+            {
+                Balance = 0,
+                UserId = user.Id,
+                InvestedBalance = 0,
+                Type = (int)WalletType.Litecoin,
+                AvailableBalance = 0,
+                Address = "asdfasdfa"
+            });
+            await _walletRepository.Add(new Wallet
+            {
+                Balance = 0,
+                UserId = user.Id,
+                InvestedBalance = 0,
+                Type = (int)WalletType.Zcash,
+                AvailableBalance = 0,
+                Address = "asdfasdfa"
+            });
         }
         public async Task<User> Authenticate(LoginCommand model)
         {

@@ -39,8 +39,6 @@ namespace Pandora.Controllers
                     Token = _jwtUtils.GenerateToken(user)
                 };
 
-               
-                ScrapeManager.UpdatePrices();
                 return new Result
                 {
                     HasError = false,

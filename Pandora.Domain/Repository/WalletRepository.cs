@@ -11,5 +11,6 @@ namespace Pandora.Domain.Repository
         Task<List<Wallet>> GetAll(Guid userId);
         Task<Wallet> GetUserWalletBalanceByType(Guid userId,int walletType);
         Task Update(Wallet wallet);
+        Task Add(Wallet wallet);
     }
 }
