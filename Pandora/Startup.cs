@@ -41,6 +41,16 @@ namespace Pandora
             });
             services.AddDbContext<EFDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("PandoraCnn")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking), ServiceLifetime.Transient);
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.AddSingleton<UpdatePriceJob>();
+            services.AddSingleton<CheckTransactionConfirmJob>();
+
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(UpdateUserPlanDailyJob),
+                cronExpression: "0 0 0 * * ?"));
+
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(UpdatePriceJob),
+                cronExpression: "0 0/15 * * * ?"));
             services.AddScoped<IJwtUtils, JwtUtils>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IDashboardService, DashboardService>();
@@ -65,16 +75,7 @@ namespace Pandora
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
 
             services.AddScoped<UpdateUserPlanDailyJob>();
-            services.AddSingleton<UpdatePriceJob>();
-            services.AddSingleton<CheckTransactionConfirmJob>();
-
-            services.AddSingleton(new JobSchedule(
-                jobType: typeof(UpdateUserPlanDailyJob),
-                cronExpression: "0 0 0 * * ?"));
-
-            services.AddSingleton(new JobSchedule(
-                jobType: typeof(UpdatePriceJob),
-                cronExpression: "0 0/15 * * * ?")); 
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
