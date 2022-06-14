@@ -138,12 +138,10 @@ namespace Pandora.Application.Service
             user.FirstName = command.FirstName;
             user.LastName = command.LastName;
             user.Country = command.Country;
-            user.Email = command.Email;
 
             await _userRepository.Update(user);
             return new UserViewModel()
             {
-                Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Country = user.Country
