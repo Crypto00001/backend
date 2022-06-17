@@ -8,7 +8,7 @@ namespace Pandora.Application.Command.Payments
         [Required]
         public int WalletType { get; set; }
         [Required]
-        public decimal Amount { get; set; }
+        public double Amount { get; set; }
         [Required]
         public string TransactionId { get; set; }
 

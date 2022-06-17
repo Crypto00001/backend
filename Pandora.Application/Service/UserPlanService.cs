@@ -20,11 +20,12 @@ namespace Pandora.Application.Service
         private readonly PlanRepository _planRepository;
         private readonly WalletRepository _walletRepository;
         private readonly ReferralRepository _refferalRepository;
+
         public UserPlanService(UserPlanRepository userPlanRepository,
-        PlanRepository planRepository,
-        UserRepository userRepository,
-        ReferralRepository referralRepository,
-        WalletRepository walletRepository)
+            PlanRepository planRepository,
+            UserRepository userRepository,
+            ReferralRepository referralRepository,
+            WalletRepository walletRepository)
         {
             _userPlanRepository = userPlanRepository;
             _userRepository = userRepository;
@@ -42,7 +43,7 @@ namespace Pandora.Application.Service
             if (plan == null)
                 throw new AppException("This plan does not exist");
 
-            decimal latestPrice = 0;
+            double latestPrice = 0;
             switch (wallet.Type)
             {
                 case (int)WalletType.Bitcoin:
@@ -58,14 +59,16 @@ namespace Pandora.Application.Service
                     latestPrice = ScrapeManager.ZCashPrice;
                     break;
             }
+
             var dollarAInvestedAmount = command.InvestmentAmount * latestPrice;
             if (dollarAInvestedAmount < plan.MinimumDeposit)
-                throw new AppException("The minimum invested amount for this plain is {0} dollars", plan.MinimumDeposit);
+                throw new AppException("The minimum invested amount for this plain is {0} dollars",
+                    plan.MinimumDeposit);
             var referralCount = await _refferalRepository.GetActiveInviteesCount(userId);
             var referralProfitPercentage = referralCount * plan.ReferralPercent;
             UserPlan userPlan = new UserPlan()
             {
-                AccruedProfit = 0,
+                AccruedProfit = command.InvestmentAmount + (command.InvestmentAmount * ((double)plan.ProfitPercent / 100)),
                 WalletType = wallet.Type,
                 InvestmentAmount = command.InvestmentAmount,
                 ProfitPercentage = plan.ProfitPercent,
@@ -102,7 +105,8 @@ namespace Pandora.Application.Service
                 IsActive = q.IsActive,
                 EndDate = q.StartDate.AddMonths(q.Duration).ToString("yyyy-mm-dd"),
                 PlanName = q.PlanName,
-                Progress = (int)Math.Floor(((DateTime.Now - q.StartDate).TotalDays / (q.StartDate.AddMonths(q.Duration) - q.StartDate).TotalDays) * 100),
+                Progress = (int)Math.Floor(((DateTime.Now - q.StartDate).TotalDays /
+                                            (q.StartDate.AddMonths(q.Duration) - q.StartDate).TotalDays) * 100),
                 ProfitPercent = q.ProfitPercent
             }).OrderByDescending(o => o.StartDate);
         }
@@ -112,7 +116,8 @@ namespace Pandora.Application.Service
             var userPlans = await _userPlanRepository.GetAllActivePlans();
             foreach (var userPlan in userPlans)
             {
-                userPlan.AccruedProfit += (userPlan.InvestmentAmount) * (decimal)(userPlan.ProfitPercentage + userPlan.ReferralProfitPercentage);
+                userPlan.AccruedProfit += (userPlan.InvestmentAmount) *
+                                          (double)(userPlan.ProfitPercentage + userPlan.ReferralProfitPercentage);
                 await _userPlanRepository.Update(userPlan);
             }
         }

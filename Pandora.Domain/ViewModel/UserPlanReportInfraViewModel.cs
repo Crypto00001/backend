@@ -11,9 +11,9 @@ namespace Pandora.Domain.ViewModel
         public string PlanName { get; set; }
         public int WalletType { get; set; }
         public int Duration { get; set; }
-        public decimal InvestmentAmount { get; set; }
-        public decimal AccruedProfit { get; set; }
-        public decimal ProfitPercent { get; set; }
+        public double InvestmentAmount { get; set; }
+        public double AccruedProfit { get; set; }
+        public int ProfitPercent { get; set; }
         public bool IsActive { get; set; }
         public DateTime StartDate { get; set; }
     }

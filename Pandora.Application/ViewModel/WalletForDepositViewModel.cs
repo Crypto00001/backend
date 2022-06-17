@@ -5,7 +5,7 @@
         public string Name { get; set; }
         public int WalletType { get; set; }
         public string WalletAddress { get; set; }
-        public decimal Balance { get; set; }
-        public decimal InvestedBalance { get; set; }
+        public double Balance { get; set; }
+        public double InvestedBalance { get; set; }
     }
 }

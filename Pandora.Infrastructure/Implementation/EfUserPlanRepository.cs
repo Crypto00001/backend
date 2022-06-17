@@ -29,7 +29,7 @@ namespace Pandora.Infrastructure.Implementation
                             IsActive = userPlan.IsActive,
                             InvestmentAmount = userPlan.InvestmentAmount,
                             PlanName = plan.Name,
-                            ProfitPercent = 10,
+                            ProfitPercent = plan.ProfitPercent,
                             WalletType = userPlan.WalletType,
                             StartDate = userPlan.CreateDate
                         };

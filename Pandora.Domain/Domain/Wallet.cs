@@ -8,9 +8,9 @@ namespace Pandora.Domain.Domain
         public Guid UserId { get; set; }
         public int Type { get; set; }
         public string Address { get; set; }
-        public decimal Balance { get; set; }
-        public decimal InvestedBalance { get; set; }
-        public decimal AvailableBalance { get; set; }
+        public double Balance { get; set; }
+        public double InvestedBalance { get; set; }
+        public double AvailableBalance { get; set; }
         
     }
 }

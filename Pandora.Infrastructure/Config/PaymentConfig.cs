@@ -9,11 +9,11 @@ namespace Pandora.Infrastructure.Config
     {
         public void Configure(EntityTypeBuilder<Payment> builder)
         {
-            builder.Property(c => c.Amount).HasColumnType(nameof(SqlDbType.Decimal)).IsRequired();
+            builder.Property(c => c.Amount).IsRequired();
             builder.Property(c => c.PaymentNumber).IsRequired();
             builder.Property(c => c.TransactionId).IsRequired();
             builder.Property(c => c.UserId).IsRequired();
-            builder.Property(c => c.WalletType).HasColumnType(nameof(SqlDbType.Decimal)).IsRequired();
+            builder.Property(c => c.WalletType).IsRequired();
 
             builder.ToTable("Payment");
         }

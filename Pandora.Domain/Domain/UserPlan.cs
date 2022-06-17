@@ -10,8 +10,8 @@ namespace Pandora.Domain.Domain
         public int WalletType { get; set; }
         public double ProfitPercentage { get; set; }
         public double ReferralProfitPercentage { get; set; }
-        public decimal InvestmentAmount { get; set; }
-        public decimal AccruedProfit { get; set; }
+        public double InvestmentAmount { get; set; }
+        public double AccruedProfit { get; set; }
         public bool IsActive { get; set; }
         
     }

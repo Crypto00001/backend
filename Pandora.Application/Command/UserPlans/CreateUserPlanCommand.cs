@@ -11,7 +11,7 @@ namespace Pandora.Application.Command.UserPlans
         [Required]
         public WalletType WalletType { get; set; }
         [Required]
-        public decimal InvestmentAmount { get; set; }
+        public double InvestmentAmount { get; set; }
 
     }
 }

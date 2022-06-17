@@ -6,9 +6,9 @@ namespace Pandora.Application.ViewModel
     {
         public string PlanName { get; set; }
         public string CurrencyName { get; set; }
-        public decimal InvestmentAmount { get; set; }
-        public decimal AccruedProfit { get; set; }
-        public decimal ProfitPercent { get; set; }
+        public double InvestmentAmount { get; set; }
+        public double AccruedProfit { get; set; }
+        public int ProfitPercent { get; set; }
         public bool IsActive { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }

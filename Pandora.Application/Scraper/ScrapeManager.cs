@@ -14,33 +14,33 @@ namespace Pandora.Application.Scraper
         private static readonly string CoinMarketCapUrl = "https://coinmarketcap.com/";
         private static readonly string TradingViewUrl = "https://www.tradingview.com/markets/cryptocurrencies/prices-all/";
 
-        private static decimal bitcoin;
-        private static decimal etherium;
-        private static decimal litecoin;
-        private static decimal zcash;
+        private static double bitcoin;
+        private static double etherium;
+        private static double litecoin;
+        private static double zcash;
 
-        public static decimal BitcoinPrice
+        public static double BitcoinPrice
         {
             get
             {
                 return bitcoin;
             }
         }
-        public static decimal EtheriumPrice
+        public static double EtheriumPrice
         {
             get
             {
                 return etherium;
             }
         }
-        public static decimal LitecoinPrice
+        public static double LitecoinPrice
         {
             get
             {
                 return litecoin;
             }
         }
-        public static decimal ZCashPrice
+        public static double ZCashPrice
         {
             get
             {
@@ -92,16 +92,16 @@ namespace Pandora.Application.Scraper
                     switch (decision)
                     {
                         case string a when Regex.IsMatch(a, @"\bBTC\b", RegexOptions.IgnoreCase):
-                            bitcoin = decimal.Parse(cells[3].Text.Replace("$", string.Empty));
+                            bitcoin = double.Parse(cells[3].Text.Replace("$", string.Empty));
                             break;
                         case string a when Regex.IsMatch(a, @"\bETH\b", RegexOptions.IgnoreCase):
-                            etherium = decimal.Parse(cells[3].Text.Replace("$", string.Empty));
+                            etherium = double.Parse(cells[3].Text.Replace("$", string.Empty));
                             break;
                         case string a when Regex.IsMatch(a, @"\bLTC\b", RegexOptions.IgnoreCase):
-                            litecoin = decimal.Parse(cells[3].Text.Replace("$", string.Empty));
+                            litecoin = double.Parse(cells[3].Text.Replace("$", string.Empty));
                             break;
                         case string a when a.Contains("Zcash"):
-                            zcash = decimal.Parse(cells[3].Text.Replace("$", string.Empty));
+                            zcash = double.Parse(cells[3].Text.Replace("$", string.Empty));
                             break;
                     }
                 }
@@ -128,16 +128,16 @@ namespace Pandora.Application.Scraper
                     switch (decision)
                     {
                         case "Bitcoin":
-                            bitcoin = decimal.Parse(cells[3].Text.Replace("$", string.Empty));
+                            bitcoin = double.Parse(cells[3].Text.Replace("$", string.Empty));
                             break;
                         case "Ethereum":
-                            etherium = decimal.Parse(cells[3].Text.Replace("$", string.Empty));
+                            etherium = double.Parse(cells[3].Text.Replace("$", string.Empty));
                             break;
                         case "Litecoin":
-                            litecoin = decimal.Parse(cells[3].Text.Replace("$", string.Empty));
+                            litecoin = double.Parse(cells[3].Text.Replace("$", string.Empty));
                             break;
                         case "Zcash":
-                            zcash = decimal.Parse(cells[3].Text.Replace("$", string.Empty));
+                            zcash = double.Parse(cells[3].Text.Replace("$", string.Empty));
                             break;
                     }
                 }
