@@ -44,14 +44,15 @@ namespace Pandora.Application.Service
                 HasInvested = false
             };
 
-            await _referralRepository.Add(referral);
+            
             try
             {
                 await SendInvitation(referral);
+                await _referralRepository.Add(referral);
             }
             catch (Exception e)
             {
-                await _referralRepository.Remove((await _referralRepository.GetByReferralCode(referral.ReferralCode)).Id);
+                //await _referralRepository.Remove((await _referralRepository.GetByReferralCode(referral.ReferralCode)).Id);
                 throw new AppException(e.Message);
             }
         }
