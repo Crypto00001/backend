@@ -15,6 +15,8 @@ namespace Pandora.Infrastructure.Config
             builder.Property(c => c.ProfitPercentage).IsRequired();
             builder.Property(c => c.ReferralProfitPercentage).IsRequired();
             builder.Property(c => c.IsActive).IsRequired();
+            builder.Property(c => c.StartDate).IsRequired();
+            builder.Property(c => c.EndDate).IsRequired();
             builder.Property(c => c.PlanId).IsRequired();
             builder.Property(c => c.UserId).IsRequired();
 

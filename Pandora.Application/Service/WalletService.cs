@@ -39,6 +39,7 @@ namespace Pandora.Application.Service
                 Balance = q.Balance,
                 WalletAddress= q.Address,
                 InvestedBalance = q.InvestedBalance,
+                AvailableBalance = q.AvailableBalance,
                 WalletType = q.Type,
             }).OrderBy(o=>o.WalletType);
         }

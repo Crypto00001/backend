@@ -7,5 +7,6 @@
         public string WalletAddress { get; set; }
         public double Balance { get; set; }
         public double InvestedBalance { get; set; }
+        public double AvailableBalance { get; set; }
     }
 }

@@ -24,6 +24,7 @@ namespace Pandora.Infrastructure.Implementation
                         where userPlan.UserId == userId
                         select new UserPlanReportInfraViewModel()
                         {
+
                             AccruedProfit = userPlan.AccruedProfit,
                             Duration = plan.Duration,
                             IsActive = userPlan.IsActive,
@@ -31,7 +32,8 @@ namespace Pandora.Infrastructure.Implementation
                             PlanName = plan.Name,
                             ProfitPercent = plan.ProfitPercent,
                             WalletType = userPlan.WalletType,
-                            StartDate = userPlan.CreateDate
+                            StartDate = userPlan.StartDate,
+                            EndDate = userPlan.EndDate
                         };
             return await query.ToListAsync();
         }

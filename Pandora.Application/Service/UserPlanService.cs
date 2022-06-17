@@ -66,16 +66,20 @@ namespace Pandora.Application.Service
                     plan.MinimumDeposit);
             var referralCount = await _refferalRepository.GetActiveInviteesCount(userId);
             var referralProfitPercentage = referralCount * plan.ReferralPercent;
+            var accruedProfit = Convert.ToDecimal(command.InvestmentAmount +
+                                                  (command.InvestmentAmount * ((double)plan.ProfitPercent / 100)));
             UserPlan userPlan = new UserPlan()
             {
-                AccruedProfit = command.InvestmentAmount + (command.InvestmentAmount * ((double)plan.ProfitPercent / 100)),
+                AccruedProfit = (double)accruedProfit,
                 WalletType = wallet.Type,
                 InvestmentAmount = command.InvestmentAmount,
                 ProfitPercentage = plan.ProfitPercent,
                 ReferralProfitPercentage = referralProfitPercentage,
                 IsActive = true,
                 UserId = userId,
-                PlanId = plan.Id
+                PlanId = plan.Id,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddMonths(plan.Duration)
             };
 
             await _userPlanRepository.Add(userPlan);
@@ -100,10 +104,10 @@ namespace Pandora.Application.Service
             {
                 CurrencyName = Enum.GetName(typeof(WalletType), q.WalletType),
                 AccruedProfit = q.AccruedProfit,
-                StartDate = q.StartDate.ToString("yyyy-mm-dd"),
+                StartDate = q.StartDate.ToString("yyyy/MM/dd"),
                 InvestmentAmount = q.InvestmentAmount,
                 IsActive = q.IsActive,
-                EndDate = q.StartDate.AddMonths(q.Duration).ToString("yyyy-mm-dd"),
+                EndDate = q.EndDate.ToString("yyyy/MM/dd"),
                 PlanName = q.PlanName,
                 Progress = (int)Math.Floor(((DateTime.Now - q.StartDate).TotalDays /
                                             (q.StartDate.AddMonths(q.Duration) - q.StartDate).TotalDays) * 100),
@@ -116,8 +120,10 @@ namespace Pandora.Application.Service
             var userPlans = await _userPlanRepository.GetAllActivePlans();
             foreach (var userPlan in userPlans)
             {
-                userPlan.AccruedProfit += (userPlan.InvestmentAmount) *
-                                          (double)(userPlan.ProfitPercentage + userPlan.ReferralProfitPercentage);
+                if (userPlan.EndDate<DateTime.Now)
+                {
+                    userPlan.IsActive = false;
+                }
                 await _userPlanRepository.Update(userPlan);
             }
         }
