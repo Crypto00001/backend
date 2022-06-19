@@ -8,9 +8,8 @@ namespace Pandora.Infrastructure.Config
     {
         public void Configure(EntityTypeBuilder<Referral> builder)
         {
-            builder.Property(c => c.ReferralCode).IsRequired();
-            builder.Property(c => c.Email).IsRequired();
-            builder.Property(c => c.HasInvested).IsRequired();
+            builder.Property(c => c.UserId).IsRequired();
+            builder.Property(c => c.InvitedUserId).IsRequired();
 
             builder.ToTable("Referral");
         }

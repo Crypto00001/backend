@@ -64,11 +64,11 @@ namespace Pandora.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("Register")]
-        public async Task<Result> RegisterAsync(CreateUserCommand command, string referralCode)
+        public async Task<Result> RegisterAsync(CreateUserCommand command)
         {
             try
             {
-                await _userService.CreateAsync(command, referralCode);
+                await _userService.CreateAsync(command);
                 return new Result
                 {
                     HasError = false

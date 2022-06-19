@@ -5,6 +5,7 @@ using BCryptNet = BCrypt.Net.BCrypt;
 using System.Collections.Generic;
 using Pandora.Application.Contract;
 using System;
+using System.Linq;
 using Pandora.Application.ViewModel;
 using System.Threading.Tasks;
 using System.Net;
@@ -19,30 +20,60 @@ namespace Pandora.Application.Service
         const int BlockMinutesAfterLimitFailedAttemptsToLogin = 1;
         private readonly UserRepository _userRepository;
         private readonly WalletRepository _walletRepository;
-        public UserService(UserRepository userRepository, WalletRepository walletRepository)
+        private readonly ReferralRepository _referralRepository;
+
+        public UserService(UserRepository userRepository, WalletRepository walletRepository,
+            ReferralRepository referralRepository)
         {
             _userRepository = userRepository;
             _walletRepository = walletRepository;
+            _referralRepository = referralRepository;
         }
 
-        public async Task CreateAsync(CreateUserCommand command, string referralCode)
+        public async Task CreateAsync(CreateUserCommand command)
         {
             if (await _userRepository.HasUserByEmail(command.Email))
                 throw new AppException("Email '" + command.Email + "' is already taken");
 
             User user = command.ToUser();
-            user.ReferralCode = referralCode;
             user.PasswordHash = BCryptNet.HashPassword(command.Password);
+            user.UserReferralCode = await GetUserRefferalCodeAsync();
+            user.Id = Guid.NewGuid();
 
+            if (!string.IsNullOrEmpty(command.ReferralCode))
+            {
+                var referral = await _userRepository.GetByReferralCode(command.ReferralCode);
+                if (referral != null)
+                {
+                    if (!await _referralRepository.IsReferralLimitationFull(referral.Id))
+                    {
+                        await _referralRepository.Add(new Referral
+                        {
+                            UserId = referral.Id,
+                            InvitedUserId = user.Id
+                        });
+                    }
+                    else
+                    {
+                        throw new AppException("The referral user has the maximum invited users");
+                    }
+                }
+                else
+                {
+                    throw new AppException("The referral user has not been found");
+                }
+            }
+            
             await _userRepository.Add(user);
+
             await _walletRepository.Add(new Wallet
             {
-                Balance=2,
-                UserId= user.Id,
-                InvestedBalance =0,
-                Type= (int)WalletType.Bitcoin,
+                Balance = 2,
+                UserId = user.Id,
+                InvestedBalance = 0,
+                Type = (int)WalletType.Bitcoin,
                 AvailableBalance = 2,
-                Address ="asdfasdfa"
+                Address = "asdfasdfa"
             });
             await _walletRepository.Add(new Wallet
             {
@@ -72,6 +103,19 @@ namespace Pandora.Application.Service
                 Address = "asdfasdfa"
             });
         }
+
+        private async Task<string> GetUserRefferalCodeAsync()
+        {
+            Random generator = new Random();
+            string result;
+            do
+            {
+                result = generator.Next(0, 1000000).ToString("D6");
+            } while (await _userRepository.GetByUserReferralCode(result) != null);
+
+            return result;
+        }
+
         public async Task<User> Authenticate(LoginCommand model)
         {
             var user = await _userRepository.GetUserByEmail(model.Email);
@@ -86,13 +130,14 @@ namespace Pandora.Application.Service
 
                 if (user.LoginFailedAttemptsCount >= MaxNumberOfFailedAttemptsToLogin
                     && user.LastLoginAttemptAt.HasValue
-                    && DateTime.Now < user.LastLoginAttemptAt.Value.AddMinutes(BlockMinutesAfterLimitFailedAttemptsToLogin))
+                    && DateTime.Now <
+                    user.LastLoginAttemptAt.Value.AddMinutes(BlockMinutesAfterLimitFailedAttemptsToLogin))
                 {
                     AppException exception = new AppException("Invalid username or password");
                     exception.Data.Add("Captcha", true);
                     throw exception;
                 }
-                
+
                 throw new AppException("Invalid username or password");
             }
             else
@@ -104,7 +149,7 @@ namespace Pandora.Application.Service
 
             return user;
         }
-        
+
         public async Task<User> GetById(Guid UserId)
         {
             return await _userRepository.GetById(UserId);
@@ -121,6 +166,7 @@ namespace Pandora.Application.Service
                 Country = user.Country
             };
         }
+
         public async Task<List<User>> GetAll()
         {
             return await _userRepository.GetAll();
@@ -164,11 +210,11 @@ namespace Pandora.Application.Service
         {
             User user = await _userRepository.GetUserByEmail(command.Email);
 
-            if (user==null)
+            if (user == null)
                 throw new AppException("Email address has not registered");
-            
+
             Random generator = new Random();
-            var resetPasswordCode=generator.Next(0, 1000000).ToString("D6");
+            var resetPasswordCode = generator.Next(0, 1000000).ToString("D6");
             await SendResetPasswordCode(command.Email, resetPasswordCode);
 
             user.ResetPasswordCode = resetPasswordCode;
@@ -177,7 +223,6 @@ namespace Pandora.Application.Service
 
         private async Task SendResetPasswordCode(string email, string code)
         {
-
             MailMessage message = new MailMessage();
             SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
             message.From = new MailAddress("sasantrader001@gmail.com");
@@ -189,17 +234,16 @@ namespace Pandora.Application.Service
             smtp.UseDefaultCredentials = false;
             smtp.Credentials = new NetworkCredential("sasantrader001@gmail.com", "trading@1");
             await smtp.SendMailAsync(message);
-
         }
 
         public async Task DoResetPassword(DoResetPasswordCommand command)
         {
             User user = await _userRepository.GetUserByEmail(command.Email);
 
-            if (user==null)
+            if (user == null)
                 throw new AppException("Email address has not registered");
 
-            if (user.ResetPasswordCode!=command.ResetCode)
+            if (user.ResetPasswordCode != command.ResetCode)
                 throw new AppException("Reset code is not correct");
 
             user.PasswordHash = BCryptNet.HashPassword(command.NewPassword);

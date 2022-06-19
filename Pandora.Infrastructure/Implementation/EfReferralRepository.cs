@@ -15,31 +15,33 @@ namespace Pandora.Infrastructure.Implementation
         public EfReferralRepository(EFDbContext context) : base(context)
         {
         }
-        public async Task<bool> HasReferralByEmail(string email)
-        {
-            return await _context.Set<Referral>().AnyAsync(q => q.Email == email);
-        }
-        public async Task<Referral> GetReferralByEmail(string email)
-        {
-            return await _context.Set<Referral>().FirstOrDefaultAsync(q => q.Email == email);
-        }
+        // public async Task<bool> HasReferralByEmail(string email)
+        // {
+        //     return await _context.Set<Referral>().AnyAsync(q => q.Email == email);
+        // }
+        // public async Task<Referral> GetReferralByEmail(string email)
+        // {
+        //     return await _context.Set<Referral>().FirstOrDefaultAsync(q => q.Email == email);
+        // }
         public async Task<int> GetActiveInviteesCount(Guid userId)
         {
-            return await _context.Set<Referral>().CountAsync(q => q.UserId == userId && q.HasInvested);
+            return await (from referral in _context.Set<Referral>().Where(q=>q.UserId == userId)
+                join user in _context.Set<User>() on referral.InvitedUserId equals user.Id
+                where user.HasInvested
+                select referral).CountAsync();
         }
-        public async Task<Referral> GetByReferralCode(string referralCode)
-        {
-            return await _context.Set<Referral>().FirstOrDefaultAsync(q => q.ReferralCode == referralCode);
-        }
-
         public async Task<bool> IsReferralLimitationFull(Guid userId)
         {
-            return await _context.Set<Referral>().CountAsync(q => q.UserId == userId) >= 30;
+            return await _context.Set<Referral>().CountAsync(q => q.UserId == userId) >= 3;
         }
 
         public async Task<List<Referral>> GetAll(Guid userId)
         {
             return await _context.Set<Referral>().Where(q => q.UserId == userId).ToListAsync();
+        }
+        public async Task<List<Referral>> GetAllInvitedUser(Guid invitedUserId)
+        {
+            return await _context.Set<Referral>().Where(q => q.InvitedUserId == invitedUserId).ToListAsync();
         }
     }
 }

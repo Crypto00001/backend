@@ -18,6 +18,14 @@ namespace Pandora.Infrastructure.Implementation
         {
             return await _context.Set<User>().FirstOrDefaultAsync(q => q.Email == email);
         }
+        public async Task<User> GetByUserReferralCode(string userReferralCode)
+        {
+            return await _context.Set<User>().FirstOrDefaultAsync(q => q.UserReferralCode == userReferralCode);
+        }
+        public async Task<User> GetByReferralCode(string referralCode)
+        {
+            return await _context.Set<User>().FirstOrDefaultAsync(q => q.ReferralCode == referralCode);
+        }
 
         public async Task<bool> HasUserByEmail(string email)
         {

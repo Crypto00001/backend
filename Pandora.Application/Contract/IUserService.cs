@@ -11,7 +11,7 @@ namespace Pandora.Application.Contract
 {
     public interface IUserService
     {
-        Task CreateAsync(CreateUserCommand command, string referralCode);
+        Task CreateAsync(CreateUserCommand command);
         Task<UserViewModel> UpdateAsync(UpdateUserCommand command, Guid userId);
         Task UpdatePassword(UpdatePasswordUserCommand command, Guid userId);
         Task DoResetPassword(DoResetPasswordCommand command);

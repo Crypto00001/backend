@@ -11,10 +11,12 @@ namespace Pandora.Infrastructure.Base
     {
         protected DbContext _context;
         private DbSet<T> entities;
+
         public EFRepository(DbContext context)
         {
             _context = context;
         }
+
         private DbSet<T> Entities
         {
             get
@@ -23,16 +25,19 @@ namespace Pandora.Infrastructure.Base
                 {
                     entities = _context.Set<T>();
                 }
+
                 return entities;
             }
         }
+
         public async Task Add(T entity)
         {
             if (entity == null)
             {
                 throw new ArgumentNullException();
             }
-            entity.Id = Guid.NewGuid();
+
+            entity.Id = entity.Id == Guid.Empty ? Guid.NewGuid() : entity.Id;
             entity.CreateDate = DateTime.Now;
 
             await _context.AddAsync(entity);
@@ -76,6 +81,7 @@ namespace Pandora.Infrastructure.Base
             {
                 throw new ArgumentNullException();
             }
+
             _context.Update(entity);
             await _context.SaveChangesAsync();
         }

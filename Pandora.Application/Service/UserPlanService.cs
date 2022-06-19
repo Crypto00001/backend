@@ -90,11 +90,10 @@ namespace Pandora.Application.Service
             await _walletRepository.Update(wallet);
 
             var user = await _userRepository.GetById(userId);
-            var refferal = await _refferalRepository.GetReferralByEmail(user.Email);
-            if (refferal != null && !refferal.HasInvested)
+            if (user != null && !user.HasInvested)
             {
-                refferal.HasInvested = true;
-                await _refferalRepository.Update(refferal);
+                user.HasInvested = true;
+                await _userRepository.Update(user);
             }
         }
 
