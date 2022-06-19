@@ -40,9 +40,58 @@ namespace Pandora.Application.Service
             user.UserReferralCode = await GetUserRefferalCodeAsync();
             user.Id = Guid.NewGuid();
 
-            if (!string.IsNullOrEmpty(command.ReferralCode))
+            await ReferralUpdating(command.ReferralCode, user.Id);
+            
+            await WalletCreating(user.Id);
+
+            await _userRepository.Add(user);
+        }
+
+        private async Task WalletCreating(Guid userId)
+        {
+            await _walletRepository.Add(new Wallet
             {
-                var referral = await _userRepository.GetByReferralCode(command.ReferralCode);
+                Balance = 2,
+                UserId = userId,
+                InvestedBalance = 0,
+                Type = (int)WalletType.Bitcoin,
+                AvailableBalance = 2,
+                Address = "asdfasdfa"
+            });
+            await _walletRepository.Add(new Wallet
+            {
+                Balance = 1,
+                UserId = userId,
+                InvestedBalance = 0,
+                Type = (int)WalletType.Etherium,
+                AvailableBalance = 1,
+                Address = "asdfasdfa"
+            });
+            await _walletRepository.Add(new Wallet
+            {
+                Balance = 0,
+                UserId = userId,
+                InvestedBalance = 0,
+                Type = (int)WalletType.Litecoin,
+                AvailableBalance = 0,
+                Address = "asdfasdfa"
+            });
+            await _walletRepository.Add(new Wallet
+            {
+                Balance = 0,
+                UserId = userId,
+                InvestedBalance = 0,
+                Type = (int)WalletType.Zcash,
+                AvailableBalance = 0,
+                Address = "asdfasdfa"
+            });
+        }
+
+        private async Task ReferralUpdating(string referralCode, Guid userId)
+        {
+            if (!string.IsNullOrEmpty(referralCode))
+            {
+                var referral = await _userRepository.GetByReferralCode(referralCode);
                 if (referral != null)
                 {
                     if (!await _referralRepository.IsReferralLimitationFull(referral.Id))
@@ -50,7 +99,7 @@ namespace Pandora.Application.Service
                         await _referralRepository.Add(new Referral
                         {
                             UserId = referral.Id,
-                            InvitedUserId = user.Id
+                            InvitedUserId = userId
                         });
                     }
                     else
@@ -63,45 +112,6 @@ namespace Pandora.Application.Service
                     throw new AppException("The referral user has not been found");
                 }
             }
-            
-            await _userRepository.Add(user);
-
-            await _walletRepository.Add(new Wallet
-            {
-                Balance = 2,
-                UserId = user.Id,
-                InvestedBalance = 0,
-                Type = (int)WalletType.Bitcoin,
-                AvailableBalance = 2,
-                Address = "asdfasdfa"
-            });
-            await _walletRepository.Add(new Wallet
-            {
-                Balance = 1,
-                UserId = user.Id,
-                InvestedBalance = 0,
-                Type = (int)WalletType.Etherium,
-                AvailableBalance = 1,
-                Address = "asdfasdfa"
-            });
-            await _walletRepository.Add(new Wallet
-            {
-                Balance = 0,
-                UserId = user.Id,
-                InvestedBalance = 0,
-                Type = (int)WalletType.Litecoin,
-                AvailableBalance = 0,
-                Address = "asdfasdfa"
-            });
-            await _walletRepository.Add(new Wallet
-            {
-                Balance = 0,
-                UserId = user.Id,
-                InvestedBalance = 0,
-                Type = (int)WalletType.Zcash,
-                AvailableBalance = 0,
-                Address = "asdfasdfa"
-            });
         }
 
         private async Task<string> GetUserRefferalCodeAsync()
