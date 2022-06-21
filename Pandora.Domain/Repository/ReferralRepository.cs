@@ -9,9 +9,8 @@ namespace Pandora.Domain.Repository
     {
         Task Add(Referral referral);
         Task Update(Referral referral);
-        //Task<bool> HasReferralByEmail(string email);
         Task<int> GetActiveInviteesCount(Guid userId);
-        //Task<Referral> GetReferralByEmail(string email);
+        Task<List<User>> GetActiveInvitees(Guid userId);
         Task<bool> IsReferralLimitationFull(Guid userId);
         Task<List<Referral>> GetAll(Guid userId);
         Task<List<Referral>> GetAllInvitedUser(Guid invitedUserId);

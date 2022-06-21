@@ -44,7 +44,7 @@ namespace Pandora.Controllers
             }
         }
         [AllowAnonymous]
-        [HttpGet]
+        [HttpGet("ActiveInviteesCount")]
         public async Task<Result> GetActiveInviteesCountAsync()
         {
             try
@@ -54,6 +54,28 @@ namespace Pandora.Controllers
                 {
                     HasError = false,
                     Data= count
+                };
+            }
+            catch (Exception e)
+            {
+                return new Result
+                {
+                    HasError = true,
+                    ErrorMessage = e.Message
+                };
+            }
+        }
+        [AllowAnonymous]
+        [HttpGet("ActiveInvitees")]
+        public async Task<Result> GetActiveInviteesAsync()
+        {
+            try
+            {
+                var list = await _referralService.GetActiveInvitees(UserSession.UserId);
+                return new Result
+                {
+                    HasError = false,
+                    Data = list
                 };
             }
             catch (Exception e)

@@ -30,9 +30,15 @@ namespace Pandora.Infrastructure.Implementation
                 where user.HasInvested
                 select referral).CountAsync();
         }
+        public async Task<List<User>> GetActiveInvitees(Guid userId)
+        {
+            return await (from referral in _context.Set<Referral>().Where(q => q.UserId == userId)
+                join user in _context.Set<User>() on referral.InvitedUserId equals user.Id
+                select user).ToListAsync();
+        }
         public async Task<bool> IsReferralLimitationFull(Guid userId)
         {
-            return await _context.Set<Referral>().CountAsync(q => q.UserId == userId) >= 3;
+            return await _context.Set<Referral>().CountAsync(q => q.UserId == userId) >= 5;
         }
 
         public async Task<List<Referral>> GetAll(Guid userId)

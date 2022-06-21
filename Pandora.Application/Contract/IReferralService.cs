@@ -12,7 +12,7 @@ namespace Pandora.Application.Contract
     public interface IReferralService
     {
         Task CreateAsync(CreateReferralCommand command, Guid userId);
-        Task<List<ReferralViewModel>> GetAll(Guid userId);
         Task<int> GetActiveInviteesCount(Guid userId);
+        Task<List<ReferralViewModel>> GetActiveInvitees(Guid userId);
     }
 }

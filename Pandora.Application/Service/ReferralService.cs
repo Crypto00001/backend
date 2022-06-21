@@ -70,17 +70,20 @@ namespace Pandora.Application.Service
             await smtp.SendMailAsync(message);
 
         }
-
-        public async Task<List<ReferralViewModel>> GetAll(Guid userId)
-        {
-            return (await _referralRepository.GetAll(userId)).Select(q => new ReferralViewModel
-            {
-                //Email = q.Email
-            }).ToList();
-        }
+        
         public async Task<int> GetActiveInviteesCount(Guid userId)
         {
             return await _referralRepository.GetActiveInviteesCount(userId);
+        }        
+        public async Task<List<ReferralViewModel>> GetActiveInvitees(Guid userId)
+        {
+            return (await _referralRepository.GetActiveInvitees(userId)).Select(q => new ReferralViewModel
+            {
+                Email = q.Email,
+                FirstName = q.FirstName,
+                LastName = q.LastName,
+                IsActive = q.HasInvested
+            }).ToList();
         }
     }
 }
