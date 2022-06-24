@@ -12,5 +12,6 @@ namespace Pandora.Application.Contract
     public interface IPlanService
     {
         Task<Plan> GetByName(string planName);
+        Task<List<PlanViewModel>> GetAll();
     }
 }

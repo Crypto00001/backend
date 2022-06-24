@@ -13,7 +13,7 @@ namespace Pandora.Domain.ViewModel
         public int Duration { get; set; }
         public double InvestmentAmount { get; set; }
         public double AccruedProfit { get; set; }
-        public int ProfitPercent { get; set; }
+        public double ProfitPercent { get; set; }
         public bool IsActive { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

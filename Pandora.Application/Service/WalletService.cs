@@ -15,6 +15,7 @@ namespace Pandora.Application.Service
     public class WalletService : IWalletService
     {
         private readonly WalletRepository _walletRepository;
+
         public WalletService(WalletRepository walletRepository)
         {
             _walletRepository = walletRepository;
@@ -37,11 +38,11 @@ namespace Pandora.Application.Service
             {
                 Name = Enum.GetName(typeof(WalletType), q.Type),
                 Balance = q.Balance,
-                WalletAddress= q.Address,
+                WalletAddress = q.Address,
                 InvestedBalance = q.InvestedBalance,
                 AvailableBalance = q.AvailableBalance,
                 WalletType = q.Type,
-            }).OrderBy(o=>o.WalletType);
+            }).OrderBy(o => o.WalletType);
         }
 
         public async Task<IEnumerable<WalletForWithdrawViewModel>> GetAllForWithdraw(Guid userId)
@@ -54,6 +55,5 @@ namespace Pandora.Application.Service
                 AvailableBalance = q.AvailableBalance
             }).OrderBy(o => o.WalletType);
         }
-
     }
 }

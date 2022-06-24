@@ -16,9 +16,9 @@ namespace Pandora.Infrastructure.Implementation
         {
         }
 
-        public Task<List<Wallet>> GetAll(Guid userId)
+        public async Task<List<Wallet>> GetAll(Guid userId)
         {
-            return _context.Set<Wallet>().Where(q => q.UserId == userId).ToListAsync();
+            return await _context.Set<Wallet>().Where(q => q.UserId == userId).ToListAsync();
         }
 
         public async Task<Wallet> GetUserWalletBalanceByType(Guid userId, int walletType)

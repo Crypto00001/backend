@@ -65,12 +65,14 @@ namespace Pandora.Application.Service
                 throw new AppException("The minimum invested amount for this plain is {0} dollars",
                     plan.MinimumDeposit);
             var referralCount = await _refferalRepository.GetActiveInviteesCount(userId);
-            var referralProfitPercentage = referralCount * plan.ReferralPercent;
-            var accruedProfit = Convert.ToDecimal(command.InvestmentAmount +
-                                                  (command.InvestmentAmount * ((double)plan.ProfitPercent / 100)));
+            var planPercentage = plan.ProfitPercent / 100;
+            var referralProfitPercentage = referralCount * ((double)plan.ReferralPercent / 100);
+            var accruedProfit = (double)(command.InvestmentAmount +
+                                                  command.InvestmentAmount *
+                                                   (planPercentage + referralProfitPercentage));
             UserPlan userPlan = new UserPlan()
             {
-                AccruedProfit = (double)accruedProfit,
+                AccruedProfit = accruedProfit,
                 WalletType = wallet.Type,
                 InvestmentAmount = command.InvestmentAmount,
                 ProfitPercentage = plan.ProfitPercent,
@@ -81,11 +83,11 @@ namespace Pandora.Application.Service
                 StartDate = DateTime.Now,
                 EndDate = DateTime.Now.AddMonths(plan.Duration)
             };
-
+            
             await _userPlanRepository.Add(userPlan);
 
 
-            wallet.AvailableBalance -= command.InvestmentAmount;
+            wallet.AvailableBalance = (double)Convert.ToDecimal(wallet.AvailableBalance - command.InvestmentAmount);
             wallet.InvestedBalance += command.InvestmentAmount;
             await _walletRepository.Update(wallet);
 
@@ -119,10 +121,11 @@ namespace Pandora.Application.Service
             var userPlans = await _userPlanRepository.GetAllActivePlans();
             foreach (var userPlan in userPlans)
             {
-                if (userPlan.EndDate<DateTime.Now)
+                if (userPlan.EndDate < DateTime.Now)
                 {
                     userPlan.IsActive = false;
                 }
+
                 await _userPlanRepository.Update(userPlan);
             }
         }

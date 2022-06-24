@@ -22,5 +22,17 @@ namespace Pandora.Application.Service
         {
             return await _planRepository.GetPlanByName(planName);
         }
+
+        public async Task<List<PlanViewModel>> GetAll()
+        {
+            return (await _planRepository.GetAll()).Select(q => new PlanViewModel()
+            {
+                Name = q.Name,
+                ProfitPercent = q.ProfitPercent,
+                ReferralPercent = q.ReferralPercent,
+                MinimumDeposit = q.MinimumDeposit,
+                Duration = q.Duration
+            }).ToList();
+        }
     }
 }
