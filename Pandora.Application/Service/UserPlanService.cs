@@ -36,7 +36,7 @@ namespace Pandora.Application.Service
 
         public async Task CreateAsync(CreateUserPlanCommand command, Guid userId)
         {
-            var wallet = await _walletRepository.GetUserWalletBalanceByType(userId, (int)command.WalletType);
+            var wallet = await _walletRepository.GetUserWalletByType(userId, (int)command.WalletType);
             if (command.InvestmentAmount > wallet.AvailableBalance)
                 throw new AppException("There is not enough balance");
             var plan = await _planRepository.GetPlanByName(command.PlanName);

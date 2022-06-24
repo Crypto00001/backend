@@ -1,13 +1,10 @@
 ﻿using Pandora.Domain.Domain;
 using Pandora.Domain.Repository;
 using BCryptNet = BCrypt.Net.BCrypt;
-using System.Collections.Generic;
 using Pandora.Application.Contract;
 using System;
-using System.Linq;
 using Pandora.Application.ViewModel;
 using System.Threading.Tasks;
-using Pandora.Application.Enums;
 using Pandora.Application.Command.Withdraws;
 
 namespace Pandora.Application.Service
@@ -34,7 +31,7 @@ namespace Pandora.Application.Service
                 UserId = userId,
                 WalletType = command.WalletType
             };
-            var wallet = await _walletRepository.GetUserWalletBalanceByType(userId, command.WalletType);
+            var wallet = await _walletRepository.GetUserWalletByType(userId, command.WalletType);
             if(command.Amount > wallet.AvailableBalance)
                 throw new AppException("You could not withdraw more than {0}",wallet.AvailableBalance.ToString("G29"));
             await _withdrawRepository.Add(withdrawal);

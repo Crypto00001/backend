@@ -14,5 +14,6 @@ namespace Pandora.Application.Contract
         Task<IEnumerable<WalletViewModel>> GetAll(Guid userId);
         Task<IEnumerable<WalletForDepositViewModel>> GetAllForDeposit(Guid userId);
         Task<IEnumerable<WalletForWithdrawViewModel>> GetAllForWithdraw(Guid userId);
+        Task<string> GetWalletAddress(Guid userId, int walletType);
     }
 }

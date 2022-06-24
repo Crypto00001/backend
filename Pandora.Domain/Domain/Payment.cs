@@ -10,6 +10,6 @@ namespace Pandora.Domain.Domain
         public double Amount { get; set; }
         public string TransactionId { get; set; }
         public string PaymentNumber { get; set; }
-        
+        public bool IsPaid { get; set; }
     }
 }

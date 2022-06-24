@@ -5,7 +5,6 @@ using BCryptNet = BCrypt.Net.BCrypt;
 using System.Collections.Generic;
 using Pandora.Application.Contract;
 using System;
-using System.Linq;
 using Pandora.Application.ViewModel;
 using System.Threading.Tasks;
 using System.Net;

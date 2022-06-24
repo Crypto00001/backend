@@ -19,5 +19,10 @@ namespace Pandora.Infrastructure.Implementation
         {
            return await _context.Set<Payment>().FirstOrDefaultAsync(q => q.PaymentNumber == paymentNumber);
         }
+
+        public async Task<bool> HasNotDupicateTransactionId(string transactionId)
+        {
+            return await _context.Set<Payment>().AnyAsync(q => q.TransactionId == transactionId && q.IsPaid);
+        }
     }
 }

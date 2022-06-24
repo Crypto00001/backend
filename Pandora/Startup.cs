@@ -39,7 +39,7 @@ namespace Pandora
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pandora", Version = "v1" });
             });
-            services.AddDbContext<EFDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("PandoraCnn")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking), ServiceLifetime.Transient);
+            services.AddDbContext<EFDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("PandoraCnn")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking), ServiceLifetime.Singleton);
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddSingleton<UpdatePriceJob>();
             services.AddSingleton<CheckTransactionConfirmJob>();
@@ -51,24 +51,25 @@ namespace Pandora
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(UpdatePriceJob),
                 cronExpression: "0 0/15 * * * ?"));
+            services.AddSingleton<CheckPaymentConfirmationScheduler>();
             services.AddScoped<IJwtUtils, JwtUtils>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IDashboardService, DashboardService>();
-            services.AddScoped<IReferralService, ReferralService>();
-            services.AddScoped<IPlanService, PlanService>();
-            services.AddScoped<IWalletService, WalletService>();
-            services.AddScoped<IUserPlanService, UserPlanService>();
-            services.AddScoped<IPaymentService, PaymentService>();
-            services.AddScoped<IWithdrawalService, WithdrawalService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IDashboardService, DashboardService>();
+            services.AddTransient<IReferralService, ReferralService>();
+            services.AddTransient<IPlanService, PlanService>();
+            services.AddTransient<IWalletService, WalletService>();
+            services.AddTransient<IUserPlanService, UserPlanService>();
+            services.AddTransient<IPaymentService, PaymentService>();
+            services.AddTransient<IWithdrawalService, WithdrawalService>();
 
-            services.AddScoped<UserRepository, EfUserRepository>();
-            services.AddScoped<DashboardRepository, EfDashboardRepository>();
-            services.AddScoped<ReferralRepository, EfReferralRepository>();
-            services.AddScoped<PlanRepository, EfPlanRepository>();
-            services.AddScoped<WalletRepository, EfWalletRepository>();
-            services.AddScoped<UserPlanRepository, EfUserPlanRepository>();
-            services.AddScoped<PaymentRepository, EfPaymentRepository>();
-            services.AddScoped<WithdrawalRepository, EfWithdrawalRepository>();
+            services.AddTransient<UserRepository, EfUserRepository>();
+            services.AddTransient<DashboardRepository, EfDashboardRepository>();
+            services.AddTransient<ReferralRepository, EfReferralRepository>();
+            services.AddTransient<PlanRepository, EfPlanRepository>();
+            services.AddTransient<WalletRepository, EfWalletRepository>();
+            services.AddTransient<UserPlanRepository, EfUserPlanRepository>();
+            services.AddTransient<PaymentRepository, EfPaymentRepository>();
+            services.AddTransient<WithdrawalRepository, EfWithdrawalRepository>();
 
             services.AddHostedService<QuartzHostedService>();
             services.AddSingleton<IJobFactory, SingletonJobFactory>();

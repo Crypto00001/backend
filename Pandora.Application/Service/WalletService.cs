@@ -1,5 +1,4 @@
-﻿using Pandora.Domain.Domain;
-using Pandora.Domain.Repository;
+﻿using Pandora.Domain.Repository;
 using BCryptNet = BCrypt.Net.BCrypt;
 using System.Collections.Generic;
 using Pandora.Application.Contract;
@@ -8,7 +7,6 @@ using System.Linq;
 using Pandora.Application.ViewModel;
 using System.Threading.Tasks;
 using Pandora.Application.Enums;
-using Pandora.Application.Scraper;
 
 namespace Pandora.Application.Service
 {
@@ -31,7 +29,10 @@ namespace Pandora.Application.Service
                 AvailableBalance = q.AvailableBalance
             });
         }
-
+        public async Task<string> GetWalletAddress(Guid userId,int walletType)
+        {
+            return (await _walletRepository.GetUserWalletByType(userId, walletType)).Address;
+        }
         public async Task<IEnumerable<WalletForDepositViewModel>> GetAllForDeposit(Guid userId)
         {
             return (await _walletRepository.GetAll(userId)).Select(q => new WalletForDepositViewModel

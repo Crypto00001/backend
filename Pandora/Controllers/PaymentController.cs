@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Pandora.Application.Scheduler;
 
 namespace Pandora.Controllers
 {
@@ -18,9 +19,12 @@ namespace Pandora.Controllers
     public class PaymentController : Controller
     {
         private readonly IPaymentService _paymentService;
-        public PaymentController(IPaymentService paymentService)
+        private readonly CheckPaymentConfirmationScheduler _checkPaymentConfirmationScheduler;
+
+        public PaymentController(IPaymentService paymentService, CheckPaymentConfirmationScheduler checkPaymentConfirmationScheduler)
         {
             _paymentService = paymentService;
+            _checkPaymentConfirmationScheduler = checkPaymentConfirmationScheduler;
         }
        
         [AllowAnonymous]
@@ -29,7 +33,7 @@ namespace Pandora.Controllers
         {
             try
             {
-                var data = await _paymentService.CreateAsync(command,UserSession.UserId);
+                var data = await _paymentService.CreateAsync(command,UserSession.UserId, _checkPaymentConfirmationScheduler);
                 return new Result
                 {
                     HasError = false,
