@@ -62,7 +62,7 @@ namespace Pandora.Application.Service
                 Balance = 1,
                 UserId = userId,
                 InvestedBalance = 0,
-                Type = (int)WalletType.Etherium,
+                Type = (int)WalletType.Ethereum,
                 AvailableBalance = 1,
                 Address = "asdfasdfa"
             });
@@ -81,6 +81,15 @@ namespace Pandora.Application.Service
                 UserId = userId,
                 InvestedBalance = 0,
                 Type = (int)WalletType.Zcash,
+                AvailableBalance = 0,
+                Address = "asdfasdfa"
+            });
+            await _walletRepository.Add(new Wallet
+            {
+                Balance = 0,
+                UserId = userId,
+                InvestedBalance = 0,
+                Type = (int)WalletType.Tether,
                 AvailableBalance = 0,
                 Address = "asdfasdfa"
             });

@@ -14,7 +14,7 @@ namespace Pandora.Application.Scheduler.Jobs
         {
             try
             {
-                return Scraper.ScrapeManager.UpdatePrices();
+                return Scraper.UpdatePriceScraper.UpdatePrices();
             }
             catch (Exception)
             {

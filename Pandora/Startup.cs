@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -35,14 +36,13 @@ namespace Pandora
         {
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pandora", Version = "v1" });
-            });
-            services.AddDbContext<EFDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("PandoraCnn")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking), ServiceLifetime.Singleton);
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pandora", Version = "v1" }); });
+            services.AddDbContext<EFDbContext>(
+                options => options.UseSqlServer(Configuration.GetConnectionString("PandoraCnn"))
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking), ServiceLifetime.Transient);
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddSingleton<UpdatePriceJob>();
-            services.AddSingleton<CheckTransactionConfirmJob>();
+            services.AddTransient<CheckTransactionConfirmJob>();
 
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(UpdateUserPlanDailyJob),
@@ -50,8 +50,8 @@ namespace Pandora
 
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(UpdatePriceJob),
-                cronExpression: "0 0/15 * * * ?"));
-            services.AddSingleton<CheckPaymentConfirmationScheduler>();
+                cronExpression: "0 0/2 * 1/1 * ? *"));
+            services.AddTransient<CheckPaymentConfirmationScheduler>();
             services.AddScoped<IJwtUtils, JwtUtils>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IDashboardService, DashboardService>();
@@ -76,7 +76,10 @@ namespace Pandora
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
 
             services.AddScoped<UpdateUserPlanDailyJob>();
-            
+            services.AddQuartz(q =>
+            {
+                q.UseMicrosoftDependencyInjectionJobFactory();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,7 +109,7 @@ namespace Pandora
                 endpoints.MapControllers();
             });
             
-            ScrapeManager.Start();
+            UpdatePriceScraper.Start();
         }
     }
 }

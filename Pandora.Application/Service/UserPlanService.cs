@@ -47,16 +47,19 @@ namespace Pandora.Application.Service
             switch (wallet.Type)
             {
                 case (int)WalletType.Bitcoin:
-                    latestPrice = ScrapeManager.BitcoinPrice;
+                    latestPrice = UpdatePriceScraper.BitcoinPrice;
                     break;
-                case (int)WalletType.Etherium:
-                    latestPrice = ScrapeManager.EtheriumPrice;
+                case (int)WalletType.Ethereum:
+                    latestPrice = UpdatePriceScraper.EthereumPrice;
                     break;
                 case (int)WalletType.Litecoin:
-                    latestPrice = ScrapeManager.LitecoinPrice;
+                    latestPrice = UpdatePriceScraper.LitecoinPrice;
                     break;
                 case (int)WalletType.Zcash:
-                    latestPrice = ScrapeManager.ZCashPrice;
+                    latestPrice = UpdatePriceScraper.ZCashPrice;
+                    break;                
+                case (int)WalletType.Tether:
+                    latestPrice = UpdatePriceScraper.TetherPrice;
                     break;
             }
 

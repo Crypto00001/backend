@@ -9,8 +9,9 @@ namespace Pandora.Application.Enums
     public enum WalletType
     {
         Bitcoin = 1,
-        Etherium = 2,
+        Ethereum = 2,
         Litecoin = 3,
-        Zcash = 4
+        Zcash = 4,
+        Tether =5
     }
 }

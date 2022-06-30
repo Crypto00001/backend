@@ -45,7 +45,7 @@ namespace Pandora.Application.Scheduler.Jobs
                         result.FromAddress == fromAddress &&
                         result.ToAddress == GetDestinationAddress(walletType))
                     {
-                        if (await _paymentRepository.HasNotDupicateTransactionId(transactionId))
+                        if (!await _paymentRepository.HasNotDupicateTransactionId(transactionId))
                         {
                             var payment = await _paymentRepository.GetById(paymentId);
                             payment.IsPaid = true;
@@ -60,17 +60,10 @@ namespace Pandora.Application.Scheduler.Jobs
                         }
                     }
                 }
-
-                await context.Scheduler.DeleteJob(key);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
             }
-
-            //Task<IScheduler> scheduler = ((ISchedulerFactory)_provider.GetService(typeof(ISchedulerFactory))).GetScheduler();
-            //Console.Write($"{DateTime.Now} [Test Test]" + userId + " " + transactionId + Environment.NewLine);
-            //return Task.CompletedTask;
         }
 
         public string GetDestinationAddress(int walletType)
@@ -81,9 +74,11 @@ namespace Pandora.Application.Scheduler.Jobs
                     return "yyy";
                 case WalletType.Bitcoin:
                     return "yyy";
-                case WalletType.Etherium:
+                case WalletType.Ethereum:
                     return "yyy";
                 case WalletType.Litecoin:
+                    return "yyy";
+                case WalletType.Tether:
                     return "yyy";
                 default:
                     return null;

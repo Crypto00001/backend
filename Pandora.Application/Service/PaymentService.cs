@@ -64,7 +64,7 @@ namespace Pandora.Application.Service
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity(Guid.NewGuid().ToString(), "CheckConfirmationGroup")
                 .WithSimpleSchedule(x => x
-                    .WithIntervalInSeconds(20)
+                    .WithIntervalInMinutes(10)
                     .WithRepeatCount(12))
                 .ForJob(job)
                 .Build();
