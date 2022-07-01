@@ -91,7 +91,7 @@ namespace Pandora.Application.Service
 
 
             wallet.AvailableBalance = (double)Convert.ToDecimal(wallet.AvailableBalance - command.InvestmentAmount);
-            wallet.InvestedBalance += command.InvestmentAmount;
+            wallet.InvestedBalance = (double)Convert.ToDecimal(wallet.InvestedBalance + command.InvestmentAmount);
             await _walletRepository.Update(wallet);
 
             var user = await _userRepository.GetById(userId);
@@ -118,19 +118,6 @@ namespace Pandora.Application.Service
                 ProfitPercent = q.ProfitPercent
             }).OrderByDescending(o => o.StartDate);
         }
-
-        public async Task UpdatePlansScheduler()
-        {
-            var userPlans = await _userPlanRepository.GetAllActivePlans();
-            foreach (var userPlan in userPlans)
-            {
-                if (userPlan.EndDate < DateTime.Now)
-                {
-                    userPlan.IsActive = false;
-                }
-
-                await _userPlanRepository.Update(userPlan);
-            }
-        }
+        
     }
 }

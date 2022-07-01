@@ -12,13 +12,10 @@ namespace Pandora.Application.Scheduler.Jobs
     {
         private readonly PaymentRepository _paymentRepository;
         private readonly WalletRepository _walletRepository;
-        private readonly IServiceProvider _provider;
 
-        public CheckTransactionConfirmJob(PaymentRepository paymentRepository, IServiceProvider provider,
-            WalletRepository walletRepository)
+        public CheckTransactionConfirmJob(PaymentRepository paymentRepository, WalletRepository walletRepository)
         {
             _paymentRepository = paymentRepository;
-            _provider = provider;
             _walletRepository = walletRepository;
         }
 

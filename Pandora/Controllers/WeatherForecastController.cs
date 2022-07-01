@@ -30,25 +30,25 @@ namespace Pandora.Controllers
         [HttpGet]
         public async Task<IEnumerable<WeatherForecast>> GetAsync()
         {
-            IScheduler scheduler = await _schedulerFactory.GetScheduler();
-
-            IJobDetail job = JobBuilder.Create<CheckTransactionConfirmJob>()
-                .UsingJobData("userId", Guid.NewGuid())
-                .UsingJobData("transactionId", new Random().Next(0, 1))
-                .Build();
-
-            // Trigger the job to run now, and then repeat every 10 seconds
-            ITrigger trigger = TriggerBuilder.Create()
-                .StartNow()
-                .WithSimpleSchedule(x => x
-                    .WithIntervalInSeconds(10)
-                    .RepeatForever())
-                .Build();
-
-            // Tell quartz to schedule the job using our trigger
-            await scheduler.ScheduleJob(job, trigger);
-            // some sleep to show what's happening
-            await Task.Delay(TimeSpan.FromSeconds(10));
+            // IScheduler scheduler = await _schedulerFactory.GetScheduler();
+            //
+            // IJobDetail job = JobBuilder.Create<CheckTransactionConfirmJob>()
+            //     .UsingJobData("userId", Guid.NewGuid())
+            //     .UsingJobData("transactionId", new Random().Next(0, 1))
+            //     .Build();
+            //
+            // // Trigger the job to run now, and then repeat every 10 seconds
+            // ITrigger trigger = TriggerBuilder.Create()
+            //     .StartNow()
+            //     .WithSimpleSchedule(x => x
+            //         .WithIntervalInSeconds(10)
+            //         .RepeatForever())
+            //     .Build();
+            //
+            // // Tell quartz to schedule the job using our trigger
+            // await scheduler.ScheduleJob(job, trigger);
+            // // some sleep to show what's happening
+            // await Task.Delay(TimeSpan.FromSeconds(10));
 
 
             var rng = new Random();

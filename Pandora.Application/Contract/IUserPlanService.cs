@@ -14,6 +14,5 @@ namespace Pandora.Application.Contract
     {
         Task<IEnumerable<UserPlanReportViewModel>> GetAll(Guid userId);
         Task CreateAsync(CreateUserPlanCommand command, Guid userId);
-        Task UpdatePlansScheduler();
     }
 }

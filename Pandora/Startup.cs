@@ -41,17 +41,20 @@ namespace Pandora
                 options => options.UseSqlServer(Configuration.GetConnectionString("PandoraCnn"))
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking), ServiceLifetime.Transient);
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-            services.AddSingleton<UpdatePriceJob>();
+
             services.AddTransient<CheckTransactionConfirmJob>();
+            services.AddTransient<CheckPaymentConfirmationScheduler>();
 
+            services.AddScoped<UpdateUserPlanAfterPlanDurationJob>();
             services.AddSingleton(new JobSchedule(
-                jobType: typeof(UpdateUserPlanDailyJob),
-                cronExpression: "0 0 0 * * ?"));
+                jobType: typeof(UpdateUserPlanAfterPlanDurationJob),
+                cronExpression: "0 0 * * *"));
 
+            services.AddSingleton<UpdatePriceJob>();
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(UpdatePriceJob),
-                cronExpression: "0 0/2 * 1/1 * ? *"));
-            services.AddTransient<CheckPaymentConfirmationScheduler>();
+                cronExpression: "0 0/15 * 1/1 *"));
+
             services.AddScoped<IJwtUtils, JwtUtils>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IDashboardService, DashboardService>();
@@ -75,7 +78,6 @@ namespace Pandora
             services.AddSingleton<IJobFactory, SingletonJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
 
-            services.AddScoped<UpdateUserPlanDailyJob>();
             services.AddQuartz(q =>
             {
                 q.UseMicrosoftDependencyInjectionJobFactory();
