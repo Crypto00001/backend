@@ -48,12 +48,12 @@ namespace Pandora
             services.AddScoped<UpdateUserPlanAfterPlanDurationJob>();
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(UpdateUserPlanAfterPlanDurationJob),
-                cronExpression: "0 0 * * *"));
+                cronExpression: "0 0 0 * * ?"));
 
             services.AddSingleton<UpdatePriceJob>();
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(UpdatePriceJob),
-                cronExpression: "0 0/15 * 1/1 *"));
+                cronExpression: "0 0/15 * * * ? *"));
 
             services.AddScoped<IJwtUtils, JwtUtils>();
             services.AddTransient<IUserService, UserService>();
