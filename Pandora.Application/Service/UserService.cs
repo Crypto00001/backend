@@ -15,8 +15,15 @@ namespace Pandora.Application.Service
 {
     public class UserService : IUserService
     {
+        private const string BitcoinAddress = "1LBR8vNcxeGbdk3FpwvsADc4adYTNs7LVQ";
+        private const string EthereumAddress = "0xF4B8Aa66BEF1Bd61e8472526E88cf5A9781d5975";
+        private const string TetherAddress = "0xF4B8Aa66BEF1Bd61e8472526E88cf5A9781d5975";
+        private const string LitecoinAddress = "LTWisZwMEr6iEdLM3hAUdGrL1viN1ipCh3";
+        private const string ZCashAddress = "t1U7dDLfd1sC4qyMmN5sfu5jLqrz2rVdVaC";
+
         const int MaxNumberOfFailedAttemptsToLogin = 3;
         const int BlockMinutesAfterLimitFailedAttemptsToLogin = 1;
+
         private readonly UserRepository _userRepository;
         private readonly WalletRepository _walletRepository;
         private readonly ReferralRepository _referralRepository;
@@ -50,21 +57,21 @@ namespace Pandora.Application.Service
         {
             await _walletRepository.Add(new Wallet
             {
-                Balance = 2,
+                Balance = 0,
                 UserId = userId,
                 InvestedBalance = 0,
                 Type = (int)WalletType.Bitcoin,
-                AvailableBalance = 2,
-                Address = "asdfasdfa"
+                AvailableBalance = 0,
+                Address = BitcoinAddress
             });
             await _walletRepository.Add(new Wallet
             {
-                Balance = 1,
+                Balance = 0,
                 UserId = userId,
                 InvestedBalance = 0,
                 Type = (int)WalletType.Ethereum,
-                AvailableBalance = 1,
-                Address = "asdfasdfa"
+                AvailableBalance = 0,
+                Address = EthereumAddress
             });
             await _walletRepository.Add(new Wallet
             {
@@ -73,7 +80,7 @@ namespace Pandora.Application.Service
                 InvestedBalance = 0,
                 Type = (int)WalletType.Litecoin,
                 AvailableBalance = 0,
-                Address = "asdfasdfa"
+                Address = LitecoinAddress
             });
             await _walletRepository.Add(new Wallet
             {
@@ -82,7 +89,7 @@ namespace Pandora.Application.Service
                 InvestedBalance = 0,
                 Type = (int)WalletType.Zcash,
                 AvailableBalance = 0,
-                Address = "asdfasdfa"
+                Address = ZCashAddress
             });
             await _walletRepository.Add(new Wallet
             {
@@ -91,7 +98,7 @@ namespace Pandora.Application.Service
                 InvestedBalance = 0,
                 Type = (int)WalletType.Tether,
                 AvailableBalance = 0,
-                Address = "asdfasdfa"
+                Address = TetherAddress
             });
         }
 
@@ -140,7 +147,7 @@ namespace Pandora.Application.Service
             if (user == null)
                 throw new AppException("Invalid username or password");
 
-            if (user == null || !BCryptNet.Verify(model.Password, user.PasswordHash))
+            if (!BCryptNet.Verify(model.Password, user.PasswordHash))
             {
                 user.LastLoginAttemptAt = DateTime.Now;
                 user.LoginFailedAttemptsCount++;
@@ -168,9 +175,9 @@ namespace Pandora.Application.Service
             return user;
         }
 
-        public async Task<User> GetById(Guid UserId)
+        public async Task<User> GetById(Guid userId)
         {
-            return await _userRepository.GetById(UserId);
+            return await _userRepository.GetById(userId);
         }
 
         public async Task<UserViewModel> GetCurrenctUserById(Guid userId)

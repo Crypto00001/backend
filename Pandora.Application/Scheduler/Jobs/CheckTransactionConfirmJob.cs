@@ -68,15 +68,15 @@ namespace Pandora.Application.Scheduler.Jobs
             switch ((WalletType)walletType)
             {
                 case WalletType.Zcash:
-                    return "yyy";
+                    return "t1U7dDLfd1sC4qyMmN5sfu5jLqrz2rVdVaC";
                 case WalletType.Bitcoin:
-                    return "yyy";
+                    return "1LBR8vNcxeGbdk3FpwvsADc4adYTNs7LVQ";
                 case WalletType.Ethereum:
-                    return "yyy";
+                    return "0xF4B8Aa66BEF1Bd61e8472526E88cf5A9781d5975";
                 case WalletType.Litecoin:
-                    return "yyy";
+                    return "LTWisZwMEr6iEdLM3hAUdGrL1viN1ipCh3";
                 case WalletType.Tether:
-                    return "yyy";
+                    return "0xF4B8Aa66BEF1Bd61e8472526E88cf5A9781d5975";
                 default:
                     return null;
             }
