@@ -5,6 +5,7 @@ using Pandora.Jwt;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pandora.Application.ViewModel;
 using System.Threading.Tasks;
 
 namespace Pandora.Controllers
@@ -21,10 +22,25 @@ namespace Pandora.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<Result> GetAllAsync()
         {
-            var plans = await _planService.GetAll();
-            return Ok(plans);
+           try
+            {
+                var plans = await _planService.GetAll();
+                return new Result
+                {
+                    HasError = false,
+                    Data= plans
+                };
+            }
+            catch (Exception e)
+            {
+                return new Result
+                {
+                    HasError = true,
+                    ErrorMessage = e.Message
+                };
+            }
         }
 
     }

@@ -32,8 +32,13 @@ namespace Pandora.Application.Service
                 WalletType = command.WalletType
             };
             var wallet = await _walletRepository.GetUserWalletByType(userId, command.WalletType);
-            if(command.Amount > wallet.AvailableBalance)
+
+            if (wallet.AvailableBalance <= 0)
+                throw new AppException("You have no balance to withdraw");
+
+            if (command.Amount > wallet.AvailableBalance)
                 throw new AppException("You could not withdraw more than {0}",wallet.AvailableBalance.ToString("G29"));
+            
             await _withdrawRepository.Add(withdrawal);
             wallet.AvailableBalance+=command.Amount;
             wallet.Balance+=command.Amount;

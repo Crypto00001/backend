@@ -88,7 +88,7 @@ namespace Pandora.Application.Scraper
                         }
                     }
                 }
-                catch (System.Exception e)
+                catch (System.Exception)
                 {
                 }
             });

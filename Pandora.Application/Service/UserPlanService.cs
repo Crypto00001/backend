@@ -70,9 +70,7 @@ namespace Pandora.Application.Service
             var referralCount = await _refferalRepository.GetActiveInviteesCount(userId);
             var planPercentage = plan.ProfitPercent / 100;
             var referralProfitPercentage = referralCount * ((double)plan.ReferralPercent / 100);
-            var accruedProfit = (double)(command.InvestmentAmount +
-                                                  command.InvestmentAmount *
-                                                   (planPercentage + referralProfitPercentage));
+            var accruedProfit=(double)(command.InvestmentAmount * Math.Pow(((1+ (planPercentage + referralProfitPercentage)/1)),plan.Duration));
             UserPlan userPlan = new UserPlan()
             {
                 AccruedProfit = accruedProfit,
