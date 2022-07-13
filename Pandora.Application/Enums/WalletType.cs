@@ -17,7 +17,7 @@ namespace Pandora.Application.Enums
         Litecoin = 3,
         [Description("t1U7dDLfd1sC4qyMmN5sfu5jLqrz2rVdVaC")]
         Zcash = 4,
-        [Description("0xF4B8Aa66BEF1Bd61e8472526E88cf5A9781d5975")]
+        [Description("TMk15yNuCwVM3QQxjpDhkyvvwjcQrCdip1")]
         Tether = 5
     }
 }

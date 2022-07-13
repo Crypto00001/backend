@@ -17,7 +17,7 @@ namespace Pandora.Application.Service
     {
         private const string BitcoinAddress = "1LBR8vNcxeGbdk3FpwvsADc4adYTNs7LVQ";
         private const string EthereumAddress = "0xF4B8Aa66BEF1Bd61e8472526E88cf5A9781d5975";
-        private const string TetherAddress = "0xF4B8Aa66BEF1Bd61e8472526E88cf5A9781d5975";
+        private const string TetherAddress = "TMk15yNuCwVM3QQxjpDhkyvvwjcQrCdip1";
         private const string LitecoinAddress = "LTWisZwMEr6iEdLM3hAUdGrL1viN1ipCh3";
         private const string ZCashAddress = "t1U7dDLfd1sC4qyMmN5sfu5jLqrz2rVdVaC";
 

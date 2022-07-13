@@ -76,7 +76,7 @@ namespace Pandora.Application.Scheduler.Jobs
                 case WalletType.Litecoin:
                     return "LTWisZwMEr6iEdLM3hAUdGrL1viN1ipCh3";
                 case WalletType.Tether:
-                    return "0xF4B8Aa66BEF1Bd61e8472526E88cf5A9781d5975";
+                    return "TMk15yNuCwVM3QQxjpDhkyvvwjcQrCdip1";
                 default:
                     return null;
             }
