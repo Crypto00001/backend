@@ -34,11 +34,11 @@ namespace Pandora
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            var connectionString = Configuration.GetConnectionString("PandoraCnn");
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pandora", Version = "v1" }); });
             services.AddDbContext<EFDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("PandoraCnn"))
+                options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking), ServiceLifetime.Transient);
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
