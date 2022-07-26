@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 
@@ -26,14 +26,14 @@ namespace Pandora.Application.CheckPaymentManager
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("no-sandbox");
             options.AddArgument("headless");
-
-            driver = new ChromeDriver(Environment.CurrentDirectory, options, TimeSpan.FromMinutes(3));
+            
+            driver = new RemoteWebDriver(new Uri("http://localhost:4444/wd/hub"), options); // instead of this url you can put the url of your remote hu
             driver.Navigate().GoToUrl(url);
             
             IWebElement divElement = driver.FindElement(By.CssSelector("input[id*='searchbar__input']"));
             divElement.SendKeys(TransactionId);
             divElement.Submit();
-
+            
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(90));
             IWebElement el = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div[id='tx-status']")));
             var elClass = el.GetAttribute("class");
@@ -41,7 +41,7 @@ namespace Pandora.Application.CheckPaymentManager
             {
                 IWebElement spanPaymentAmount = driver.FindElements(By.CssSelector("span[class='wb-ba']")).First();
                 ReadOnlyCollection<IWebElement> addresses = driver.FindElements(By.CssSelector("a[class='hash mr-5 d-inline va-mid']"));
-
+            
                 return new ResultCheckPaymentModel
                 {
                     PaymentAmount = Convert.ToDecimal(spanPaymentAmount.Text),
@@ -50,7 +50,7 @@ namespace Pandora.Application.CheckPaymentManager
                     IsConfirmed = true
                 };
             }
-
+            
             return new ResultCheckPaymentModel()
             {
                 IsConfirmed = false

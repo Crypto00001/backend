@@ -34,12 +34,20 @@ namespace Pandora
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("PandoraCnn");
+            var serverVersion = new MySqlServerVersion(new Version(8, 0, 28));
+            const string host = "database";
+            var password = Configuration["ConnectionStrings:MYSQL_PASSWORD"];
+            var userid = Configuration["ConnectionStrings:MYSQL_USER"];
+            var usersDataBase = Configuration["ConnectionStrings:MYSQL_DATABASE"];
+
+            var connectionString = $"server={host}; userid={userid};pwd={password};database={usersDataBase}";
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pandora", Version = "v1" }); });
+
             services.AddDbContext<EFDbContext>(
-                options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+                options => options.UseMySql(connectionString, serverVersion)
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking), ServiceLifetime.Transient);
+
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             services.AddTransient<CheckTransactionConfirmJob>();
@@ -78,22 +86,15 @@ namespace Pandora
             services.AddSingleton<IJobFactory, SingletonJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
 
-            services.AddQuartz(q =>
-            {
-                q.UseMicrosoftDependencyInjectionJobFactory();
-            });
+            services.AddQuartz(q => { q.UseMicrosoftDependencyInjectionJobFactory(); });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pandora v1"));
-            }
-
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pandora v1"));
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -106,11 +107,8 @@ namespace Pandora
             app.UseAuthorization();
 
             app.UseMiddleware<JwtMiddleware>();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-            
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
             UpdatePriceScraper.Start();
         }
     }

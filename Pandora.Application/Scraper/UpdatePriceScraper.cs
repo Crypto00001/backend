@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using OpenQA.Selenium.Remote;
 
 namespace Pandora.Application.Scraper
 {
@@ -17,7 +18,7 @@ namespace Pandora.Application.Scraper
             "https://www.tradingview.com/markets/cryptocurrencies/prices-all/";
 
         public static double BitcoinPrice { get; private set; }
-
+            
         public static double EthereumPrice { get; private set; }
 
         public static double LitecoinPrice { get; private set; }
@@ -32,7 +33,7 @@ namespace Pandora.Application.Scraper
             options.AddArgument("no-sandbox");
             options.AddArgument("headless");
 
-            driver = new ChromeDriver(Environment.CurrentDirectory, options, TimeSpan.FromMinutes(3));
+            driver = new RemoteWebDriver(new Uri("http://selenium-hub:4444/wd/hub"), options);
         }
 
         public static async Task UpdatePrices()
